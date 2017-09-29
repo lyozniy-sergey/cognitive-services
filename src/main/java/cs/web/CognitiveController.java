@@ -52,44 +52,10 @@ public class CognitiveController {
 
     private static Route getRecommendToUserBy(final HttpClient httpclient) {
         return executeCSCall(GET_REC_BY_USER, httpclient, RecommendationParameters.builder());
-//        return new Route(GET_REC_BY_USER) {
-//            @Override
-//            public Object handle(Request request, Response response) {
-//                try {
-//                    CognitiveParameters.Builder builder = CognitiveParameters.builder().init(request);
-//
-//                    URI uri = RecommendationParameters.builder().init(request).buildURI(builder.buildURI()).buildURI();
-//                    HttpResponse httpResponse = httpclient.execute(builder.buildGetHeader(uri));
-//
-//                    return getJsonResult(httpResponse);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    halt(500);
-//                }
-//                return null;
-//            }
-//        };
     }
 
     private static Route getFaceRecognize(final HttpClient httpclient) {
         return executeCSCall(GET_FACE_RECOGNIZE, httpclient, FaceParameters.builder());
-//        return new Route(GET_FACE_RECOGNIZE) {
-//            @Override
-//            public Object handle(Request request, Response response) {
-//                try {
-//                    CognitiveParameters.Builder builder = CognitiveParameters.builder().init(request);
-//
-//                    URI uri = FaceParameters.builder().init(request).buildURI(builder.buildURI());
-//                    HttpResponse httpResponse = httpclient.execute(builder.buildPostHeader(uri,"{ \"url\": \"http://example.com/images/test.jpg\" }"));
-//
-//                    return getJsonResult(httpResponse);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    halt(500);
-//                }
-//                return null;
-//            }
-//        };
     }
 
     private static Route executeCSCall(String path, HttpClient httpclient, IBuilder featureBuilder) {
@@ -97,9 +63,7 @@ public class CognitiveController {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-//                    CognitiveParameters.Builder builder = CognitiveParameters.builder().init(request);
                     URI uri = featureBuilder.init(request).buildURI();
-//                    builder.buildPostHeader(uri, "");
                     HttpResponse httpResponse = httpclient.execute(featureBuilder.buildRequest(uri));
 
                     return getJsonResult(httpResponse);
@@ -119,7 +83,7 @@ public class CognitiveController {
             jsonString = formatJson(EntityUtils.toString(entity).trim());
             printJson(jsonString);
         }
-//                return new Gson().toJson(jsonString, String.class);
+//        return new Gson().toJson(jsonString, String.class);
         return jsonString;
     }
 
