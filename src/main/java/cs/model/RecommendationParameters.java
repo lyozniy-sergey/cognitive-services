@@ -13,21 +13,12 @@ import java.net.URISyntaxException;
  * @author lyozniy.sergey on 28 Sep 2017.
  */
 public class RecommendationParameters extends CognitiveParameters {
-    private String modelId;
     private String userId;
     private Integer numberOfResults;
 
     private String itemsIds;
     private boolean includeMetadata;
     private Integer buildId;
-
-    public String getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
-    }
 
     public String getUserId() {
         return userId;
@@ -105,9 +96,6 @@ public class RecommendationParameters extends CognitiveParameters {
             builder.setParameter("userId", parameters.getUserId());
             if (parameters.getNumberOfResults() != null) {
                 builder.setParameter("numberOfResults", String.valueOf(parameters.getNumberOfResults()));
-            }
-            if (parameters.getModelId() != null) {
-                builder.setParameter("modelId", parameters.getModelId());
             }
             if (parameters.getItemsIds() != null) {
                 builder.setParameter("itemsIds", parameters.getItemsIds());
