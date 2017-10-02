@@ -73,7 +73,7 @@ public class RecommendationParameters extends CognitiveParameters {
         return new Builder(new RecommendationParameters());
     }
 
-    public static final class Builder extends CognitiveParameters.CognitiveBuilder implements IBuilder {
+    public static final class Builder extends CognitiveBuilder implements IBuilder {
         private final RecommendationParameters parameters;
 
         private Builder(RecommendationParameters parameters) {

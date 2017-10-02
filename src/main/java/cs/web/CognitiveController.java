@@ -47,14 +47,14 @@ public class CognitiveController {
     public static void main(String[] args) throws IOException {
         HttpClient httpclient = HttpClients.createDefault();
         get(getRecommendToUserBy(httpclient));
-        get(getFaceRecognize(httpclient));
+        get(getFaceRecognizeBy(httpclient));
     }
 
     private static Route getRecommendToUserBy(final HttpClient httpclient) {
         return executeCSCall(GET_REC_BY_USER, httpclient, RecommendationParameters.builder());
     }
 
-    private static Route getFaceRecognize(final HttpClient httpclient) {
+    private static Route getFaceRecognizeBy(final HttpClient httpclient) {
         return executeCSCall(GET_FACE_RECOGNIZE, httpclient, FaceParameters.builder());
     }
 
