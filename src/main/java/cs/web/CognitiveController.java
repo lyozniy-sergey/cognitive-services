@@ -33,8 +33,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -93,27 +91,14 @@ public class CognitiveController {
         String jsonString = null;
         HttpEntity entity = httpResponse.getEntity();
         if (entity != null) {
-            jsonString = formatJson(EntityUtils.toString(entity).trim());
+            jsonString = prettify(EntityUtils.toString(entity).trim());
             printJson(jsonString);
         }
-//        return new Gson().toJson(jsonString, String.class);
         return jsonString;
     }
 
     private static void printJson(String jsonString) {
-        System.out.println(prettify(jsonString));
-    }
-
-    private static String formatJson(String jsonString) {
-        if (jsonString.charAt(0) == '[') {
-            JSONArray jsonArray = new JSONArray(jsonString);
-            return jsonArray.toString(2);
-        } else if (jsonString.charAt(0) == '{') {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            return jsonObject.toString(2);
-        } else {
-            return jsonString;
-        }
+        System.out.println(jsonString);
     }
 
     public static String prettify(String jsonText) {
@@ -163,21 +148,9 @@ public class CognitiveController {
         @Override
         public Object handle(Request request, Response response) {
             try {
-//                File uploadDir = new File("upload");
-//                if(!uploadDir.mkdir()){
-//                    halt(500, "Can't create temporary dir for storing upload file");
-//                    // create the upload directory if it doesn't exist
-//                }
-//
-//                staticFiles.externalLocation("upload");
-//                staticFiles.expireTime(600);
-//
-//                Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
-
                 request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
                 try (InputStream input = request.raw().getPart("upload_catalog").getInputStream()) { // getPart needs to use same "name" as input field in form
-//                    Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
                     BufferedReader br = new BufferedReader(new InputStreamReader(input));
                     // skip the header of the csv
 //                    inputList = br.lines().skip(1).map(function).collect(Collectors.toList());
