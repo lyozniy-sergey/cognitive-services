@@ -16,39 +16,48 @@ import static cs.web.CognitiveController.MultipartRoute.FILE_CONTENT;
 /**
  * @author lyozniy.sergey on 02 Oct 2017.
  */
-public class CatalogParameters extends CognitiveParameters {
-    private String catalogName;
+public class FileUploadParameters extends CognitiveParameters {
+    private String displayName;
+    private final String displayHeader;
 
-    public String getCatalogName() {
-        return catalogName;
+    public FileUploadParameters(String displayHeader) {
+        this.displayHeader = displayHeader;
     }
 
-    public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public static Builder builder() {
-        return new Builder(new CatalogParameters());
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public static final class Builder extends CognitiveBuilder implements IBuilder {
-        private final CatalogParameters parameters;
+    public String getDisplayHeader() {
+        return displayHeader;
+    }
 
-        private Builder(CatalogParameters parameters) {
+    public static Builder builder(String displayHeader) {
+        return new Builder(new FileUploadParameters(displayHeader));
+    }
+
+    public static class Builder extends CognitiveBuilder implements IBuilder {
+        private final FileUploadParameters parameters;
+
+        private Builder(FileUploadParameters parameters) {
             super(parameters);
             this.parameters = parameters;
         }
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setCatalogName(request.queryParams("catalogDisplayName"));
+            parameters.setDisplayName(request.queryParams(parameters.getDisplayHeader()));
             parameters.setSource(request.attribute(FILE_CONTENT));
             return this;
         }
 
         public URI buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
-            builder.setParameter("catalogDisplayName", parameters.getCatalogName());
+            builder.setParameter(parameters.getDisplayHeader(), parameters.getDisplayName());
             return builder.build();
         }
 
@@ -58,7 +67,7 @@ public class CatalogParameters extends CognitiveParameters {
             httpPost.setHeader("Ocp-Apim-Subscription-Key", parameters.getSubscriptionKey());
             StringBuilder sb = new StringBuilder();
             if (parameters.getSource() instanceof List) {
-                ((List) parameters.getSource()).forEach(c -> {
+                ((List<?>) parameters.getSource()).forEach(c -> {
                     sb.append(c);
                     sb.append(System.getProperty("line.separator"));
                 });

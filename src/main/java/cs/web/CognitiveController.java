@@ -24,8 +24,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import cs.model.CatalogParameters;
 import cs.model.FaceParameters;
+import cs.model.FileUploadParameters;
 import cs.model.IBuilder;
 import cs.model.RecommendationParameters;
 import org.apache.http.HttpEntity;
@@ -47,7 +47,10 @@ import java.util.stream.Collectors;
 
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
 import static cs.util.Path.Web.GET_REC_BY_USER;
+import static cs.util.Path.Web.Headers.CATALOG;
+import static cs.util.Path.Web.Headers.USAGE;
 import static cs.util.Path.Web.UPLOAD_CATALOG;
+import static cs.util.Path.Web.UPLOAD_USAGE;
 import static spark.Spark.get;
 import static spark.Spark.halt;
 import static spark.Spark.port;
@@ -63,16 +66,26 @@ public class CognitiveController {
         HttpClient httpclient = HttpClients.createDefault();
         get("/c", (req, res) ->
                 "<form method='post' action='/upload_catalog' enctype='multipart/form-data'>" // note the enctype
-                        + "<input type='file' name='upload_catalog' accept='.csv'>" // make sure to call getPart using the same "name" in the post
+                        + "<input type='file' name='upload' accept='.csv'>" // make sure to call getPart using the same "name" in the post
                         + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/catalog'>"
                         + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
                         + "<input type='hidden' name='catalogDisplayName' value='Catalog3'>"
                         + "<button>Upload file</button>"
                         + "</form>"
         );
+        get("/u", (req, res) ->
+                "<form method='post' action='/upload_usage' enctype='multipart/form-data'>" // note the enctype
+                        + "<input type='file' name='upload' accept='.csv'>" // make sure to call getPart using the same "name" in the post
+                        + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/usage'>"
+                        + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
+                        + "<input type='hidden' name='usageDisplayName' value='Usage1'>"
+                        + "<button>Upload file</button>"
+                        + "</form>"
+        );
         get(GET_REC_BY_USER, getRecommendToUserBy(httpclient));
         get(GET_FACE_RECOGNIZE, getFaceRecognizeBy(httpclient));
         post(UPLOAD_CATALOG, uploadCatalog(httpclient));
+        post(UPLOAD_USAGE, uploadUsage(httpclient));
     }
 
     private static Route getRecommendToUserBy(final HttpClient httpclient) {
@@ -84,7 +97,11 @@ public class CognitiveController {
     }
 
     private static Route uploadCatalog(final HttpClient httpclient) {
-        return new MultipartRoute(httpclient, CatalogParameters.builder());
+        return new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG));
+    }
+
+    private static Route uploadUsage(final HttpClient httpclient) {
+        return new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE));
     }
 
     private static String getJsonResult(HttpResponse httpResponse) throws IOException {
@@ -150,7 +167,7 @@ public class CognitiveController {
             try {
                 request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
-                try (InputStream input = request.raw().getPart("upload_catalog").getInputStream()) { // getPart needs to use same "name" as input field in form
+                try (InputStream input = request.raw().getPart("upload").getInputStream()) { // getPart needs to use same "name" as input field in form
                     BufferedReader br = new BufferedReader(new InputStreamReader(input));
                     // skip the header of the csv
 //                    inputList = br.lines().skip(1).map(function).collect(Collectors.toList());
