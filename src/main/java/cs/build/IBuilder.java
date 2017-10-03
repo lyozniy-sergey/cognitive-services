@@ -1,4 +1,4 @@
-package cs.model;
+package cs.build;
 
 import org.apache.http.client.methods.HttpUriRequest;
 import spark.Request;

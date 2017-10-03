@@ -1,5 +1,6 @@
 package cs.model;
 
+import cs.build.IBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
