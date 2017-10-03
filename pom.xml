@@ -10,9 +10,9 @@
 
     <dependencies>
         <!--<dependency>-->
-            <!--<groupId>org.mongodb</groupId>-->
-            <!--<artifactId>mongo-java-driver</artifactId>-->
-            <!--<version>3.2.2</version>-->
+        <!--<groupId>org.mongodb</groupId>-->
+        <!--<artifactId>mongo-java-driver</artifactId>-->
+        <!--<version>3.2.2</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -22,21 +22,21 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.freemarker</groupId>-->
-            <!--<artifactId>freemarker</artifactId>-->
-            <!--<version>2.3.19</version>-->
+        <!--<groupId>org.freemarker</groupId>-->
+        <!--<artifactId>freemarker</artifactId>-->
+        <!--<version>2.3.19</version>-->
         <!--</dependency>-->
 
         <!--<dependency>-->
-            <!--<groupId>org.apache.commons</groupId>-->
-            <!--<artifactId>commons-lang3</artifactId>-->
-            <!--<version>3.1</version>-->
+        <!--<groupId>org.apache.commons</groupId>-->
+        <!--<artifactId>commons-lang3</artifactId>-->
+        <!--<version>3.1</version>-->
         <!--</dependency>-->
 
         <!--<dependency>-->
-            <!--<groupId>commons-codec</groupId>-->
-            <!--<artifactId>commons-codec</artifactId>-->
-            <!--<version>1.7</version>-->
+        <!--<groupId>commons-codec</groupId>-->
+        <!--<artifactId>commons-codec</artifactId>-->
+        <!--<version>1.7</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -76,10 +76,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.3</version>
                 <configuration>
+                    <fork>true</fork>
+                    <maxmem>1024m</maxmem>
+                    <meminitial>256m</meminitial>
+                    <encoding>UTF-8</encoding>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <debug>true</debug>
+                    <debuglevel>lines,vars,source</debuglevel>
+                    <compilerArgs>
+                        <arg>-Xlint:varargs</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
