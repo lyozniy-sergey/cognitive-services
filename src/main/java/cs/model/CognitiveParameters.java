@@ -81,7 +81,7 @@ public abstract class CognitiveParameters {
         }
     }
 
-    private static RuntimeException throwException(String message) {
+    public static RuntimeException throwException(String message) {
         return new RuntimeException(message);
     }
 }

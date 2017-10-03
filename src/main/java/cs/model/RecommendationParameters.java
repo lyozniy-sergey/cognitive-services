@@ -9,6 +9,7 @@ import spark.Request;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * @author lyozniy.sergey on 28 Sep 2017.
@@ -80,19 +81,15 @@ public class RecommendationParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setUserId(request.queryParams(USER_ID));
-            String numberOfResults = request.queryParams(NUMBER_OF_RESULTS);
-            if (numberOfResults != null) {
-                parameters.setNumberOfResults(Integer.valueOf(numberOfResults));
-            }
-            String buildId = request.queryParams(BUILD_ID);
-            if (buildId != null) {
-                parameters.setBuildId(Integer.valueOf(buildId));
-            }
-            String includeMetadata = request.queryParams(INCLUDE_METADATA);
-            if (includeMetadata != null) {
-                parameters.setIncludeMetadata(Boolean.valueOf(includeMetadata));
-            }
+            parameters.setUserId(Optional.ofNullable(request.queryParams(USER_ID)).orElseThrow(() -> throwException("User id is not provided")));
+            parameters.setNumberOfResults(Integer.valueOf(Optional.ofNullable(request.queryParams(NUMBER_OF_RESULTS)).orElseThrow(() -> throwException("Number of results is not provided"))));
+
+            Optional<String> buildId = Optional.ofNullable(request.queryParams(BUILD_ID));
+            buildId.ifPresent(b -> parameters.setBuildId(Integer.valueOf(b)));
+
+            Optional<String> includeMetadata = Optional.ofNullable(request.queryParams(INCLUDE_METADATA));
+            includeMetadata.ifPresent(i -> parameters.setIncludeMetadata(Boolean.valueOf(i)));
+
             parameters.setItemsIds(request.queryParams(ITEMS_IDS));
             return this;
         }
@@ -100,9 +97,7 @@ public class RecommendationParameters extends CognitiveParameters {
         public URI buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
             builder.setParameter(USER_ID, parameters.getUserId());
-            if (parameters.getNumberOfResults() != null) {
-                builder.setParameter(NUMBER_OF_RESULTS, parameters.getNumberOfResults().toString());
-            }
+            builder.setParameter(NUMBER_OF_RESULTS, parameters.getNumberOfResults().toString());
             if (parameters.isIncludeMetadata() != null) {
                 builder.setParameter(INCLUDE_METADATA, parameters.isIncludeMetadata().toString());
             }
