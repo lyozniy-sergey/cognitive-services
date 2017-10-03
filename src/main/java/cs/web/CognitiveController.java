@@ -29,6 +29,7 @@ import spark.Route;
 
 import java.io.IOException;
 
+import static cs.util.Path.Web.CREATE_MODEL;
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
 import static cs.util.Path.Web.GET_REC_BY_USER;
 import static cs.util.Path.Web.Headers.CATALOG;
@@ -69,6 +70,11 @@ public class CognitiveController {
         get(GET_FACE_RECOGNIZE, getFaceRecognizeBy(httpclient));
         post(UPLOAD_CATALOG, uploadCatalog(httpclient));
         post(UPLOAD_USAGE, uploadUsage(httpclient));
+        post(CREATE_MODEL, createModel(httpclient));
+    }
+
+    private static Route createModel(final HttpClient httpclient) {
+        return new BaseRoute(httpclient, FaceParameters.builder());
     }
 
     private static Route getRecommendToUserBy(final HttpClient httpclient) {

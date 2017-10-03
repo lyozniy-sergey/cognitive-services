@@ -10,6 +10,7 @@ public class Path {
         public static String GET_FACE_RECOGNIZE = "/face";
         public static String UPLOAD_CATALOG = "/upload_catalog";
         public static String UPLOAD_USAGE = "/upload_usage";
+        public static String CREATE_MODEL = "/create_model";
 
         public static class Headers {
             public static String CATALOG = "catalogDisplayName";
