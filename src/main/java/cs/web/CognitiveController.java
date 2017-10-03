@@ -52,7 +52,7 @@ public class CognitiveController {
                         + "<input type='file' name='upload' accept='.csv'>" // make sure to call getPart using the same "name" in the post
                         + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/catalog'>"
                         + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
-                        + "<input type='hidden' name='catalogDisplayName' value='Catalog3'>"
+                        + "<input type='hidden' name='catalogDisplayName' value='Catalog1'>"
                         + "<button>Upload file</button>"
                         + "</form>"
         );
