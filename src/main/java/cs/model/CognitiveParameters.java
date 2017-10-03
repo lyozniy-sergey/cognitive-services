@@ -1,5 +1,6 @@
 package cs.model;
 
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import spark.Request;
 
@@ -71,6 +72,12 @@ public abstract class CognitiveParameters {
                 uriBuilder.setParameter("modelId", parameters.getModelId());
             }
             return uriBuilder;
+        }
+
+        public <R extends HttpUriRequest> R buildHeader(R request) {
+            request.setHeader("Content-Type", "application/json");
+            request.setHeader("Ocp-Apim-Subscription-Key", parameters.getSubscriptionKey());
+            return request;
         }
     }
 

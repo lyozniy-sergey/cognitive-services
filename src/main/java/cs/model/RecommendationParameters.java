@@ -18,7 +18,7 @@ public class RecommendationParameters extends CognitiveParameters {
     private Integer numberOfResults;
 
     private String itemsIds;
-    private boolean includeMetadata;
+    private Boolean includeMetadata;
     private Integer buildId;
 
     public String getUserId() {
@@ -45,11 +45,11 @@ public class RecommendationParameters extends CognitiveParameters {
         this.itemsIds = itemsIds;
     }
 
-    public boolean isIncludeMetadata() {
+    public Boolean isIncludeMetadata() {
         return includeMetadata;
     }
 
-    public void setIncludeMetadata(boolean includeMetadata) {
+    public void setIncludeMetadata(Boolean includeMetadata) {
         this.includeMetadata = includeMetadata;
     }
 
@@ -66,6 +66,11 @@ public class RecommendationParameters extends CognitiveParameters {
     }
 
     public static final class Builder extends CognitiveBuilder implements IBuilder {
+        private static final String USER_ID = "userId";
+        private static final String NUMBER_OF_RESULTS = "numberOfResults";
+        private static final String BUILD_ID = "buildId";
+        private static final String INCLUDE_METADATA = "includeMetadata";
+        private static final String ITEMS_IDS = "itemsIds";
         private final RecommendationParameters parameters;
 
         private Builder(RecommendationParameters parameters) {
@@ -75,43 +80,43 @@ public class RecommendationParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setUserId(request.queryParams("userId"));
-            String numberOfResults = request.queryParams("numberOfResults");
+            parameters.setUserId(request.queryParams(USER_ID));
+            String numberOfResults = request.queryParams(NUMBER_OF_RESULTS);
             if (numberOfResults != null) {
                 parameters.setNumberOfResults(Integer.valueOf(numberOfResults));
             }
-            String buildId = request.queryParams("buildId");
+            String buildId = request.queryParams(BUILD_ID);
             if (buildId != null) {
                 parameters.setBuildId(Integer.valueOf(buildId));
             }
-            String includeMetadata = request.queryParams("includeMetadata");
+            String includeMetadata = request.queryParams(INCLUDE_METADATA);
             if (includeMetadata != null) {
                 parameters.setIncludeMetadata(Boolean.valueOf(includeMetadata));
             }
-            parameters.setItemsIds(request.queryParams("itemsIds"));
+            parameters.setItemsIds(request.queryParams(ITEMS_IDS));
             return this;
         }
 
         public URI buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
-            builder.setParameter("userId", parameters.getUserId());
+            builder.setParameter(USER_ID, parameters.getUserId());
             if (parameters.getNumberOfResults() != null) {
-                builder.setParameter("numberOfResults", String.valueOf(parameters.getNumberOfResults()));
+                builder.setParameter(NUMBER_OF_RESULTS, parameters.getNumberOfResults().toString());
+            }
+            if (parameters.isIncludeMetadata() != null) {
+                builder.setParameter(INCLUDE_METADATA, parameters.isIncludeMetadata().toString());
             }
             if (parameters.getItemsIds() != null) {
-                builder.setParameter("itemsIds", parameters.getItemsIds());
+                builder.setParameter(ITEMS_IDS, parameters.getItemsIds());
             }
             if (parameters.getBuildId() != null) {
-                builder.setParameter("buildId", String.valueOf(parameters.getBuildId()));
+                builder.setParameter(BUILD_ID, parameters.getBuildId().toString());
             }
             return builder.build();
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-            HttpGet httpGet = new HttpGet(uri);
-            httpGet.setHeader("Content-Type", "application/json");
-            httpGet.setHeader("Ocp-Apim-Subscription-Key", parameters.getSubscriptionKey());
-            return httpGet;
+            return buildHeader(new HttpGet(uri));
         }
     }
 }

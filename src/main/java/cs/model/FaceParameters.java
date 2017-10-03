@@ -50,6 +50,9 @@ public class FaceParameters extends CognitiveParameters {
     }
 
     public static final class Builder extends CognitiveBuilder implements IBuilder {
+        public static final String RETURN_FACE_ID = "returnFaceId";
+        public static final String RETURN_FACE_LANDMARKS = "returnFaceLandmarks";
+        public static final String RETURN_FACE_ATTRIBUTES = "returnFaceAttributes";
         private final FaceParameters parameters;
 
         private Builder(FaceParameters parameters) {
@@ -59,24 +62,22 @@ public class FaceParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setReturnFaceId(Boolean.valueOf(Optional.ofNullable(request.queryParams("returnFaceId")).orElse("true")));
-            parameters.setReturnFaceLandmarks(Boolean.valueOf(Optional.ofNullable(request.queryParams("returnFaceLandmarks")).orElse("false")));
-            parameters.setReturnFaceAttributes(Optional.ofNullable(request.queryParams("returnFaceAttributes")).orElse(""));
+            parameters.setReturnFaceId(Boolean.valueOf(Optional.ofNullable(request.queryParams(RETURN_FACE_ID)).orElse("true")));
+            parameters.setReturnFaceLandmarks(Boolean.valueOf(Optional.ofNullable(request.queryParams(RETURN_FACE_LANDMARKS)).orElse("false")));
+            parameters.setReturnFaceAttributes(Optional.ofNullable(request.queryParams(RETURN_FACE_ATTRIBUTES)).orElse(""));
             return this;
         }
 
         public URI buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
-            builder.setParameter("returnFaceId", String.valueOf(parameters.isReturnFaceId()));
-            builder.setParameter("returnFaceLandmarks", String.valueOf(parameters.isReturnFaceLandmarks()));
-            builder.setParameter("returnFaceAttributes", parameters.getReturnFaceAttributes());
+            builder.setParameter(RETURN_FACE_ID, String.valueOf(parameters.isReturnFaceId()));
+            builder.setParameter(RETURN_FACE_LANDMARKS, String.valueOf(parameters.isReturnFaceLandmarks()));
+            builder.setParameter(RETURN_FACE_ATTRIBUTES, parameters.getReturnFaceAttributes());
             return builder.build();
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-            HttpPost httpPost = new HttpPost(uri);
-            httpPost.setHeader("Content-Type", "application/json");
-            httpPost.setHeader("Ocp-Apim-Subscription-Key", parameters.getSubscriptionKey());
+            HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
             StringEntity reqEntity = new StringEntity(String.format(body, parameters.getSource()));
             httpPost.setEntity(reqEntity);

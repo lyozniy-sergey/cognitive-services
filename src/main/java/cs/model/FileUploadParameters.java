@@ -12,7 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static cs.web.CognitiveController.MultipartRoute.FILE_CONTENT;
+import static cs.web.route.MultipartRoute.FILE_CONTENT;
 
 /**
  * @author lyozniy.sergey on 02 Oct 2017.
@@ -63,9 +63,7 @@ public class FileUploadParameters extends CognitiveParameters {
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-            HttpPost httpPost = new HttpPost(uri);
-            httpPost.setHeader("Content-Type", "application/json");
-            httpPost.setHeader("Ocp-Apim-Subscription-Key", parameters.getSubscriptionKey());
+            HttpPost httpPost = buildHeader(new HttpPost(uri));
             StringBuilder sb = new StringBuilder();
             if (parameters.getSource() instanceof List) {
                 ((List<?>) parameters.getSource()).forEach(c -> {

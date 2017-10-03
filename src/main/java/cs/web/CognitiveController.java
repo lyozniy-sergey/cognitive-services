@@ -18,32 +18,16 @@
 package cs.web;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import cs.build.IBuilder;
 import cs.model.FaceParameters;
 import cs.model.FileUploadParameters;
 import cs.model.RecommendationParameters;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import cs.web.route.BaseRoute;
+import cs.web.route.MultipartRoute;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import spark.Request;
-import spark.Response;
 import spark.Route;
 
-import javax.servlet.MultipartConfigElement;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.stream.Collectors;
 
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
 import static cs.util.Path.Web.GET_REC_BY_USER;
@@ -52,7 +36,6 @@ import static cs.util.Path.Web.Headers.USAGE;
 import static cs.util.Path.Web.UPLOAD_CATALOG;
 import static cs.util.Path.Web.UPLOAD_USAGE;
 import static spark.Spark.get;
-import static spark.Spark.halt;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
@@ -102,82 +85,5 @@ public class CognitiveController {
 
     private static Route uploadUsage(final HttpClient httpclient) {
         return new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE));
-    }
-
-    private static String getJsonResult(HttpResponse httpResponse) throws IOException {
-        String jsonString = null;
-        HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            jsonString = prettify(EntityUtils.toString(entity).trim());
-            printJson(jsonString);
-        }
-        return jsonString;
-    }
-
-    private static void printJson(String jsonString) {
-        System.out.println(jsonString);
-    }
-
-    public static String prettify(String jsonText) {
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(jsonText);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        if(jsonElement.isJsonArray()){
-            JsonArray json = jsonElement.getAsJsonArray();
-            return gson.toJson(json);
-        }
-        else {
-            JsonObject json = jsonElement.getAsJsonObject();
-            return gson.toJson(json);
-        }
-    }
-
-    public static class BaseRoute implements Route {
-        protected IBuilder builder;
-        protected HttpClient httpClient;
-
-        public BaseRoute(HttpClient httpClient, IBuilder builder) {
-            this.builder = builder;
-            this.httpClient = httpClient;
-        }
-
-        @Override
-        public Object handle(Request request, Response response) {
-            try {
-                URI uri = builder.init(request).buildURI();
-                HttpResponse httpResponse = httpClient.execute(builder.buildRequest(uri));
-
-                return getJsonResult(httpResponse);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw halt(500);
-            }
-        }
-    }
-
-    public static class MultipartRoute extends BaseRoute {
-        public static final String FILE_CONTENT = "fileContent";
-
-        public MultipartRoute(HttpClient httpClient, IBuilder builder) {
-            super(httpClient, builder);
-        }
-
-        @Override
-        public Object handle(Request request, Response response) {
-            try {
-                request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-                try (InputStream input = request.raw().getPart("upload").getInputStream()) { // getPart needs to use same "name" as input field in form
-                    BufferedReader br = new BufferedReader(new InputStreamReader(input));
-                    // skip the header of the csv
-//                    inputList = br.lines().skip(1).map(function).collect(Collectors.toList());
-                    request.attribute(FILE_CONTENT, br.lines().collect(Collectors.toList()));
-                }
-                return super.handle(request, response);
-            } catch (Exception exc) {
-                exc.printStackTrace();
-                throw halt(500);
-            }
-        }
     }
 }
