@@ -11,6 +11,7 @@ public class Path {
         public static String UPLOAD_CATALOG = "/upload_catalog";
         public static String UPLOAD_USAGE = "/upload_usage";
         public static String CREATE_MODEL = "/create_model";
+        public static String CREATE_BUILD = "/create_build";
 
         public static class Headers {
             public static String CATALOG = "catalogDisplayName";

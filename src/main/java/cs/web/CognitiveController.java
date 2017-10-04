@@ -18,6 +18,7 @@
 package cs.web;
 
 
+import cs.model.BuildParameters;
 import cs.model.FaceParameters;
 import cs.model.FileUploadParameters;
 import cs.model.ModelParameters;
@@ -29,6 +30,7 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 
+import static cs.util.Path.Web.CREATE_BUILD;
 import static cs.util.Path.Web.CREATE_MODEL;
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
 import static cs.util.Path.Web.GET_REC_BY_USER;
@@ -48,28 +50,33 @@ public class CognitiveController {
     public static void main(String[] args) throws IOException {
         port(8082);
         HttpClient httpclient = HttpClients.createDefault();
-        get("/c", (req, res) ->
-                "<form method='post' action='/upload_catalog' enctype='multipart/form-data'>" // note the enctype
-                        + "<input type='file' name='upload' accept='.csv'>" // make sure to call getPart using the same "name" in the post
-                        + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/catalog'>"
-                        + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
-                        + "<input type='hidden' name='catalogDisplayName' value='Catalog1'>"
-                        + "<button>Upload file</button>"
-                        + "</form>"
-        );
+        get("/c", (req, res) -> getUploadCatalogForm());
         get("/u", (req, res) ->
-                "<form method='post' action='/upload_usage' enctype='multipart/form-data'>" // note the enctype
-                        + "<input type='file' name='upload' accept='.csv'>" // make sure to call getPart using the same "name" in the post
-                        + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/usage'>"
-                        + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
-                        + "<input type='hidden' name='usageDisplayName' value='Usage1'>"
-                        + "<button>Upload file</button>"
-                        + "</form>"
+                getUploadUsageForm()
         );
         get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
         get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
         post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
         post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
         get(CREATE_MODEL, new BaseRoute(httpclient, ModelParameters.builder()));
+        get(CREATE_BUILD, new BaseRoute(httpclient, BuildParameters.builder()));
+    }
+
+    private static String getUploadUsageForm() {
+        return getUploadForm("upload_usage", "usageDisplayName", "Usage1");
+    }
+
+    private static String getUploadCatalogForm() {
+        return getUploadForm("upload_catalog", "catalogDisplayName", "Catalog1");
+    }
+
+    private static String getUploadForm(String action, String header, String value) {
+        return String.format("<form method='post' action='/%s' enctype='multipart/form-data'>"
+                + "<input type='file' name='upload' accept='.csv'>"
+                + "<input type='hidden' name='uriBase' value='https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/b1a1e954-ab2e-4da3-9aaa-6ecee7b08166/catalog'>"
+                + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
+                + "<input type='text' name='%s' value='%s'>"
+                + "<button>%s</button>"
+                + "</form>", action, header, value, action);
     }
 }
