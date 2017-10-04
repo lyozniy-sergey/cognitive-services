@@ -20,12 +20,12 @@ package cs.web;
 
 import cs.model.FaceParameters;
 import cs.model.FileUploadParameters;
+import cs.model.ModelParameters;
 import cs.model.RecommendationParameters;
 import cs.web.route.BaseRoute;
 import cs.web.route.MultipartRoute;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
-import spark.Route;
 
 import java.io.IOException;
 
@@ -66,30 +66,10 @@ public class CognitiveController {
                         + "<button>Upload file</button>"
                         + "</form>"
         );
-        get(GET_REC_BY_USER, getRecommendToUserBy(httpclient));
-        get(GET_FACE_RECOGNIZE, getFaceRecognizeBy(httpclient));
-        post(UPLOAD_CATALOG, uploadCatalog(httpclient));
-        post(UPLOAD_USAGE, uploadUsage(httpclient));
-        post(CREATE_MODEL, createModel(httpclient));
-    }
-
-    private static Route createModel(final HttpClient httpclient) {
-        return new BaseRoute(httpclient, FaceParameters.builder());
-    }
-
-    private static Route getRecommendToUserBy(final HttpClient httpclient) {
-        return new BaseRoute(httpclient, RecommendationParameters.builder());
-    }
-
-    private static Route getFaceRecognizeBy(final HttpClient httpclient) {
-        return new BaseRoute(httpclient, FaceParameters.builder());
-    }
-
-    private static Route uploadCatalog(final HttpClient httpclient) {
-        return new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG));
-    }
-
-    private static Route uploadUsage(final HttpClient httpclient) {
-        return new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE));
+        get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
+        get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
+        post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
+        post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
+        get(CREATE_MODEL, new BaseRoute(httpclient, ModelParameters.builder()));
     }
 }

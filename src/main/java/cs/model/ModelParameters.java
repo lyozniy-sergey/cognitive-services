@@ -17,15 +17,15 @@ import java.util.Optional;
  * @author lyozniy.sergey on 29 Sep 2017.
  */
 public class ModelParameters extends CognitiveParameters {
-    private String name;
+    private String modelName;
     private String description;
 
-    public String getName() {
-        return name;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public String getDescription() {
@@ -34,6 +34,13 @@ public class ModelParameters extends CognitiveParameters {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    private ModelParameters getDto() {
+        ModelParameters mp = new ModelParameters();
+        mp.setModelName(getModelName());
+        mp.setDescription(getDescription());
+        return mp;
     }
 
     public static Builder builder() {
@@ -50,7 +57,7 @@ public class ModelParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setName(Optional.ofNullable(request.queryParams("name")).orElseThrow(() -> throwException("name of model is not set")));
+            parameters.setModelName(Optional.ofNullable(request.queryParams("modelName")).orElseThrow(() -> throwException("The name of model is not set")));
             parameters.setDescription(Optional.ofNullable(request.queryParams("description")).orElse(""));
             return this;
         }
@@ -63,7 +70,7 @@ public class ModelParameters extends CognitiveParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
-            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters));
+            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters.getDto()));
             httpPost.setEntity(reqEntity);
             return httpPost;
         }
