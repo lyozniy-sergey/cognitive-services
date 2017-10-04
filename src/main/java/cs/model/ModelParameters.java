@@ -36,13 +36,6 @@ public class ModelParameters extends CognitiveParameters {
         this.description = description;
     }
 
-    private ModelParameters getDto() {
-        ModelParameters mp = new ModelParameters();
-        mp.setModelName(getModelName());
-        mp.setDescription(getDescription());
-        return mp;
-    }
-
     public static Builder builder() {
         return new Builder(new ModelParameters());
     }
@@ -70,7 +63,7 @@ public class ModelParameters extends CognitiveParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
-            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters.getDto()));
+            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
         }

@@ -56,14 +56,6 @@ public class BuildParameters extends CognitiveParameters {
         this.buildParameters = buildParameters;
     }
 
-    private BuildParameters getDto() {
-        BuildParameters mp = new BuildParameters();
-        mp.setBuildType(getBuildType());
-        mp.setDescription(getDescription());
-        mp.setBuildParameters(getBuildParameters());
-        return mp;
-    }
-
     public static Builder builder() {
         return new Builder(new BuildParameters());
     }
@@ -91,7 +83,7 @@ public class BuildParameters extends CognitiveParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
-            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters.getDto()));
+            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
         }

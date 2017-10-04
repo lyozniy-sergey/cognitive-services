@@ -11,10 +11,10 @@ import java.util.Optional;
  * @author lyozniy.sergey on 29 Sep 2017.
  */
 public abstract class CognitiveParameters {
-    private String subscriptionKey;
-    private String uriBase;
-    private Object source;
-    private String modelId;
+    private transient String subscriptionKey;
+    private transient String uriBase;
+    private transient Object source;
+    private transient String modelId;
 
     public String getSubscriptionKey() {
         return subscriptionKey;

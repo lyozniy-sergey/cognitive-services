@@ -51,9 +51,7 @@ public class CognitiveController {
         port(8082);
         HttpClient httpclient = HttpClients.createDefault();
         get("/c", (req, res) -> getUploadCatalogForm());
-        get("/u", (req, res) ->
-                getUploadUsageForm()
-        );
+        get("/u", (req, res) -> getUploadUsageForm());
         get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
         get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
         post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
