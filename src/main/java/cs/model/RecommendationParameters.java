@@ -19,6 +19,7 @@ public class RecommendationParameters extends CognitiveParameters {
     private Integer numberOfResults;
 
     private String itemsIds;
+    private Integer minimalScore;
     private Boolean includeMetadata;
     private Integer buildId;
 
@@ -62,6 +63,18 @@ public class RecommendationParameters extends CognitiveParameters {
         this.buildId = buildId;
     }
 
+    public Integer getMinimalScore() {
+        return minimalScore;
+    }
+
+    public void setMinimalScore(Integer minimalScore) {
+        this.minimalScore = minimalScore;
+    }
+
+    public Boolean getIncludeMetadata() {
+        return includeMetadata;
+    }
+
     public static Builder builder() {
         return new Builder(new RecommendationParameters());
     }
@@ -72,6 +85,7 @@ public class RecommendationParameters extends CognitiveParameters {
         private static final String BUILD_ID = "buildId";
         private static final String INCLUDE_METADATA = "includeMetadata";
         private static final String ITEMS_IDS = "itemsIds";
+        private static final String MINIMAL_SCORE = "minimalScore";
         private final RecommendationParameters parameters;
 
         private Builder(RecommendationParameters parameters) {
@@ -91,6 +105,7 @@ public class RecommendationParameters extends CognitiveParameters {
             includeMetadata.ifPresent(i -> parameters.setIncludeMetadata(Boolean.valueOf(i)));
 
             parameters.setItemsIds(request.queryParams(ITEMS_IDS));
+            parameters.setMinimalScore(Integer.valueOf(Optional.ofNullable(request.queryParams(MINIMAL_SCORE)).orElseThrow(() -> throwException("Minimal score is not provided"))));
             return this;
         }
 
@@ -106,6 +121,9 @@ public class RecommendationParameters extends CognitiveParameters {
             }
             if (parameters.getBuildId() != null) {
                 builder.setParameter(BUILD_ID, parameters.getBuildId().toString());
+            }
+            if (parameters.getMinimalScore() != null) {
+                builder.setParameter(MINIMAL_SCORE, parameters.getMinimalScore().toString());
             }
             return builder.build();
         }

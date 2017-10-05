@@ -33,6 +33,7 @@ import java.io.IOException;
 import static cs.util.Path.Web.CREATE_BUILD;
 import static cs.util.Path.Web.CREATE_MODEL;
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
+import static cs.util.Path.Web.GET_REC_BY_ITEM;
 import static cs.util.Path.Web.GET_REC_BY_USER;
 import static cs.util.Path.Web.Headers.CATALOG;
 import static cs.util.Path.Web.Headers.USAGE;
@@ -57,6 +58,7 @@ public class CognitiveController {
         post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
         get(CREATE_BUILD, new BaseRoute(httpclient, BuildParameters.builder()));
         get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
+        get(GET_REC_BY_ITEM, new BaseRoute(httpclient, RecommendationParameters.builder()));
         get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
     }
 
