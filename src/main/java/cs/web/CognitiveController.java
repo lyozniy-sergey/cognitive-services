@@ -52,12 +52,12 @@ public class CognitiveController {
         HttpClient httpclient = HttpClients.createDefault();
         get("/c", (req, res) -> getUploadCatalogForm());
         get("/u", (req, res) -> getUploadUsageForm());
-        get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
-        get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
+        get(CREATE_MODEL, new BaseRoute(httpclient, ModelParameters.builder()));
         post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
         post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
-        get(CREATE_MODEL, new BaseRoute(httpclient, ModelParameters.builder()));
         get(CREATE_BUILD, new BaseRoute(httpclient, BuildParameters.builder()));
+        get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
+        get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
     }
 
     private static String getUploadUsageForm() {

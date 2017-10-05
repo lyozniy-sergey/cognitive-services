@@ -172,17 +172,20 @@ public class BuildParameters extends CognitiveParameters {
                 getOptional(request, "itemCutOffUpperBound").ifPresent(p -> parameters.setItemCutOffUpperBound(toInt(p)));
                 getOptional(request, "userCutOffLowerBound").ifPresent(p -> parameters.setUserCutOffLowerBound(toInt(p)));
                 getOptional(request, "userCutOffUpperBound").ifPresent(p -> parameters.setUserCutOffUpperBound(toInt(p)));
-                getOptional(request, "enableModelingInsights").ifPresent(p -> parameters.setEnableModelingInsights(toBoolean(p)));
-                parameters.setSplitterStrategy(request.queryParams("splitterStrategy"));
-                parameters.setRandomSplitterParameters(RandomSplitterParameters.builder().init(request).build());
-                parameters.setDateSplitterParameters(DateSplitterParameters.builder().init(request).build());
                 getOptional(request, "popularItemBenchmarkWindow").ifPresent(p -> parameters.setPopularItemBenchmarkWindow(toInt(p)));
+
                 getOptional(request, "useFeaturesInModel").ifPresent(p -> parameters.setUseFeaturesInModel(toBoolean(p)));
-                parameters.setModelingFeatureList(request.queryParams("modelingFeatureList"));
+                getOptional(request, "enableModelingInsights").ifPresent(p -> parameters.setEnableModelingInsights(toBoolean(p)));
                 getOptional(request, "allowColdItemPlacement").ifPresent(p -> parameters.setAllowColdItemPlacement(toBoolean(p)));
                 getOptional(request, "enableFeatureCorrelation").ifPresent(p -> parameters.setEnableFeatureCorrelation(toBoolean(p)));
-                parameters.setReasoningFeatureList(request.queryParams("reasoningFeatureList"));
                 getOptional(request, "enableU2I").ifPresent(p -> parameters.setEnableU2I(toBoolean(p)));
+
+                parameters.setReasoningFeatureList(request.queryParams("reasoningFeatureList"));
+                parameters.setSplitterStrategy(request.queryParams("splitterStrategy"));
+                parameters.setModelingFeatureList(request.queryParams("modelingFeatureList"));
+
+                parameters.setRandomSplitterParameters(RandomSplitterParameters.builder().init(request).build());
+                parameters.setDateSplitterParameters(DateSplitterParameters.builder().init(request).build());
                 return this;
             }
 
