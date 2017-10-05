@@ -72,7 +72,7 @@ public class BuildParameters extends CognitiveParameters {
             super.init(request);
             parameters.setBuildType(Optional.ofNullable(request.queryParams("buildType")).orElseThrow(() -> throwException("Build type is not set")));
             parameters.setDescription(Optional.ofNullable(request.queryParams("description")).orElse(""));
-            parameters.getBuildParameters().get(parameters.getBuildType()).getBuilder().init(request);
+            Optional.ofNullable(parameters.getBuildParameters().get(parameters.getBuildType())).orElseThrow(()->throwException("Build type is not valid")).getBuilder().init(request);
             return this;
         }
 
@@ -651,6 +651,132 @@ public class BuildParameters extends CognitiveParameters {
     private static class SarParameters implements Parameters {
 
         public static final String SAR = "sar";
+        private Integer supportThreshold;
+        private Integer popularItemBenchmarkWindow;
+        private String similarityFunction;
+        private Boolean enableModelingInsights;
+        private String splitterStrategy;
+        private RandomSplitterParameters randomSplitterParameters;
+        private DateSplitterParameters dateSplitterParameters;
+        private String cooccurrenceUnit;
+        private Boolean enableColdItemPlacement;
+        private Boolean enableColdToColdRecommendations;
+        private Boolean enableU2I;
+        private Boolean enableUserAffinity;
+        private Boolean allowSeedItemsInRecommendations;
+        private Boolean enableBackfilling;
+
+        public Integer getSupportThreshold() {
+            return supportThreshold;
+        }
+
+        public void setSupportThreshold(Integer supportThreshold) {
+            this.supportThreshold = supportThreshold;
+        }
+
+        public Integer getPopularItemBenchmarkWindow() {
+            return popularItemBenchmarkWindow;
+        }
+
+        public void setPopularItemBenchmarkWindow(Integer popularItemBenchmarkWindow) {
+            this.popularItemBenchmarkWindow = popularItemBenchmarkWindow;
+        }
+
+        public String getSimilarityFunction() {
+            return similarityFunction;
+        }
+
+        public void setSimilarityFunction(String similarityFunction) {
+            this.similarityFunction = similarityFunction;
+        }
+
+        public Boolean getEnableModelingInsights() {
+            return enableModelingInsights;
+        }
+
+        public void setEnableModelingInsights(Boolean enableModelingInsights) {
+            this.enableModelingInsights = enableModelingInsights;
+        }
+
+        public String getSplitterStrategy() {
+            return splitterStrategy;
+        }
+
+        public void setSplitterStrategy(String splitterStrategy) {
+            this.splitterStrategy = splitterStrategy;
+        }
+
+        public RandomSplitterParameters getRandomSplitterParameters() {
+            return randomSplitterParameters;
+        }
+
+        public void setRandomSplitterParameters(RandomSplitterParameters randomSplitterParameters) {
+            this.randomSplitterParameters = randomSplitterParameters;
+        }
+
+        public DateSplitterParameters getDateSplitterParameters() {
+            return dateSplitterParameters;
+        }
+
+        public void setDateSplitterParameters(DateSplitterParameters dateSplitterParameters) {
+            this.dateSplitterParameters = dateSplitterParameters;
+        }
+
+        public String getCooccurrenceUnit() {
+            return cooccurrenceUnit;
+        }
+
+        public void setCooccurrenceUnit(String cooccurrenceUnit) {
+            this.cooccurrenceUnit = cooccurrenceUnit;
+        }
+
+        public Boolean getEnableColdItemPlacement() {
+            return enableColdItemPlacement;
+        }
+
+        public void setEnableColdItemPlacement(Boolean enableColdItemPlacement) {
+            this.enableColdItemPlacement = enableColdItemPlacement;
+        }
+
+        public Boolean getEnableColdToColdRecommendations() {
+            return enableColdToColdRecommendations;
+        }
+
+        public void setEnableColdToColdRecommendations(Boolean enableColdToColdRecommendations) {
+            this.enableColdToColdRecommendations = enableColdToColdRecommendations;
+        }
+
+        public Boolean getEnableU2I() {
+            return enableU2I;
+        }
+
+        public void setEnableU2I(Boolean enableU2I) {
+            this.enableU2I = enableU2I;
+        }
+
+        public Boolean getEnableUserAffinity() {
+            return enableUserAffinity;
+        }
+
+        public void setEnableUserAffinity(Boolean enableUserAffinity) {
+            this.enableUserAffinity = enableUserAffinity;
+        }
+
+        public Boolean getAllowSeedItemsInRecommendations() {
+            return allowSeedItemsInRecommendations;
+        }
+
+        public void setAllowSeedItemsInRecommendations(Boolean allowSeedItemsInRecommendations) {
+            this.allowSeedItemsInRecommendations = allowSeedItemsInRecommendations;
+        }
+
+        public Boolean getEnableBackfilling() {
+            return enableBackfilling;
+        }
+
+        public void setEnableBackfilling(Boolean enableBackfilling) {
+            this.enableBackfilling = enableBackfilling;
+        }
 
         @Override
         public String getBuildType() {
@@ -677,6 +803,23 @@ public class BuildParameters extends CognitiveParameters {
             }
 
             public Builder init(Request request) {
+                getOptional(request, "supportThreshold").ifPresent(p -> parameters.setSupportThreshold(toInt(p)));
+                getOptional(request, "popularItemBenchmarkWindow").ifPresent(p -> parameters.setPopularItemBenchmarkWindow(toInt(p)));
+
+                getOptional(request, "enableModelingInsights").ifPresent(p -> parameters.setEnableModelingInsights(toBoolean(p)));
+                getOptional(request, "enableColdItemPlacement").ifPresent(p -> parameters.setEnableColdItemPlacement(toBoolean(p)));
+                getOptional(request, "enableColdToColdRecommendations").ifPresent(p -> parameters.setEnableColdToColdRecommendations(toBoolean(p)));
+                getOptional(request, "enableU2I").ifPresent(p -> parameters.setEnableU2I(toBoolean(p)));
+                getOptional(request, "enableUserAffinity").ifPresent(p -> parameters.setEnableUserAffinity(toBoolean(p)));
+                getOptional(request, "allowSeedItemsInRecommendations").ifPresent(p -> parameters.setAllowSeedItemsInRecommendations(toBoolean(p)));
+                getOptional(request, "enableBackfilling").ifPresent(p -> parameters.setEnableBackfilling(toBoolean(p)));
+
+                parameters.setCooccurrenceUnit(request.queryParams("cooccurrenceUnit"));
+                parameters.setSimilarityFunction(request.queryParams("similarityFunction"));
+                parameters.setSplitterStrategy(request.queryParams("splitterStrategy"));
+
+                parameters.setRandomSplitterParameters(RandomSplitterParameters.builder().init(request).build());
+                parameters.setDateSplitterParameters(DateSplitterParameters.builder().init(request).build());
                 return this;
             }
 
