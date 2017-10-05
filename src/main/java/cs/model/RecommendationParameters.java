@@ -19,7 +19,7 @@ public class RecommendationParameters extends CognitiveParameters {
     private Integer numberOfResults;
 
     private String itemsIds;
-    private Integer minimalScore;
+    private Double minimalScore;
     private Boolean includeMetadata;
     private Integer buildId;
 
@@ -63,11 +63,11 @@ public class RecommendationParameters extends CognitiveParameters {
         this.buildId = buildId;
     }
 
-    public Integer getMinimalScore() {
+    public Double getMinimalScore() {
         return minimalScore;
     }
 
-    public void setMinimalScore(Integer minimalScore) {
+    public void setMinimalScore(Double minimalScore) {
         this.minimalScore = minimalScore;
     }
 
@@ -105,7 +105,7 @@ public class RecommendationParameters extends CognitiveParameters {
             includeMetadata.ifPresent(i -> parameters.setIncludeMetadata(Boolean.valueOf(i)));
 
             parameters.setItemsIds(request.queryParams(ITEMS_IDS));
-            parameters.setMinimalScore(Integer.valueOf(Optional.ofNullable(request.queryParams(MINIMAL_SCORE)).orElseThrow(() -> throwException("Minimal score is not provided"))));
+            parameters.setMinimalScore(Double.valueOf(Optional.ofNullable(request.queryParams(MINIMAL_SCORE)).orElseThrow(() -> throwException("Minimal score is not provided"))));
             return this;
         }
 
