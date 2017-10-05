@@ -96,7 +96,7 @@ public class BuildParameters extends CognitiveParameters {
     private static class BuildParametersHolder {
         private static final Map<String, Parameters> buildTypes = ImmutableMap.<String, Parameters>builder().
                 put(RankParameters.RANK, new RankParameters()).
-                put(RecommendationParameters.RECOMMENDATION, new RecommendationParameters()).
+                put(BuildRecommendationParameters.RECOMMENDATION, new BuildRecommendationParameters()).
                 put(FbtParameters.FBT, new FbtParameters()).
                 put(SarParameters.SAR, new SarParameters()).
                 build();
@@ -106,13 +106,25 @@ public class BuildParameters extends CognitiveParameters {
         }
     }
 
+    private static Boolean toBoolean(String p) {
+        return Boolean.valueOf(p);
+    }
+
+    private static Integer toInt(String p) {
+        return Integer.valueOf(p);
+    }
+
+    private static Optional<String> getOptional(Request request, String field) {
+        return Optional.ofNullable(request.queryParams(field));
+    }
+
     private interface Parameters {
         String getBuildType();
 
         IBuilder getBuilder();
     }
 
-    private static class RecommendationParameters implements Parameters {
+    private static class BuildRecommendationParameters implements Parameters {
         public static final String RECOMMENDATION = "recommendation";
         private Integer numberOfModelIterations;
         private Integer numberOfModelDimensions;
@@ -137,30 +149,22 @@ public class BuildParameters extends CognitiveParameters {
             return RECOMMENDATION;
         }
 
-        private static Boolean toBoolean(String p) {
-            return Boolean.valueOf(p);
-        }
-
-        private static Integer toInt(String p) {
-            return Integer.valueOf(p);
-        }
-
-        private static Optional<String> getOptional(Request request, String field) {
-            return Optional.ofNullable(request.queryParams(field));
-        }
-
-        public IBuilder getBuilder(){
-            return builder();
+        public IBuilder getBuilder() {
+            return builder(this);
         }
 
         public static Builder builder() {
-            return new Builder(new RecommendationParameters());
+            return builder(new BuildRecommendationParameters());
+        }
+
+        public static Builder builder(BuildRecommendationParameters bp) {
+            return new Builder(bp);
         }
 
         public static final class Builder implements IBuilder {
-            private final RecommendationParameters parameters;
+            private final BuildRecommendationParameters parameters;
 
-            private Builder(RecommendationParameters parameters) {
+            private Builder(BuildRecommendationParameters parameters) {
                 this.parameters = parameters;
             }
 
@@ -199,7 +203,7 @@ public class BuildParameters extends CognitiveParameters {
                 return null;
             }
 
-            public RecommendationParameters build() {
+            public BuildRecommendationParameters build() {
                 return parameters;
             }
         }
@@ -339,118 +343,122 @@ public class BuildParameters extends CognitiveParameters {
         public void setDateSplitterParameters(DateSplitterParameters dateSplitterParameters) {
             this.dateSplitterParameters = dateSplitterParameters;
         }
+    }
 
-        private static class RandomSplitterParameters implements Parameters {
-            private Integer testPercent;
-            private Integer randomSeed;
+    private static class RandomSplitterParameters implements Parameters {
+        private Integer testPercent;
+        private Integer randomSeed;
 
-            public Integer getTestPercent() {
-                return testPercent;
-            }
-
-            public void setTestPercent(Integer testPercent) {
-                this.testPercent = testPercent;
-            }
-
-            public Integer getRandomSeed() {
-                return randomSeed;
-            }
-
-            public void setRandomSeed(Integer randomSeed) {
-                this.randomSeed = randomSeed;
-            }
-
-            @Override
-            public String getBuildType() {
-                return null;
-            }
-
-            public IBuilder getBuilder(){
-                return builder();
-            }
-
-            public static Builder builder() {
-                return new Builder(new RandomSplitterParameters());
-            }
-
-            public static final class Builder implements IBuilder {
-                private final RandomSplitterParameters parameters;
-
-                private Builder(RandomSplitterParameters parameters) {
-                    this.parameters = parameters;
-                }
-
-                public Builder init(Request request) {
-                    getOptional(request, "testPercent").ifPresent(p -> parameters.setTestPercent(toInt(p)));
-                    getOptional(request, "randomSeed").ifPresent(p -> parameters.setRandomSeed(toInt(p)));
-                    return this;
-                }
-
-                @Override
-                public URI buildURI() throws URISyntaxException {
-                    return null;
-                }
-
-                @Override
-                public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-                    return null;
-                }
-
-                public RandomSplitterParameters build() {
-                    return parameters;
-                }
-            }
+        public Integer getTestPercent() {
+            return testPercent;
         }
 
-        private static class DateSplitterParameters implements Parameters {
-            private String splitDate;
+        public void setTestPercent(Integer testPercent) {
+            this.testPercent = testPercent;
+        }
 
-            public String getSplitDate() {
-                return splitDate;
+        public Integer getRandomSeed() {
+            return randomSeed;
+        }
+
+        public void setRandomSeed(Integer randomSeed) {
+            this.randomSeed = randomSeed;
+        }
+
+        @Override
+        public String getBuildType() {
+            return null;
+        }
+
+        public IBuilder getBuilder() {
+            return builder(this);
+        }
+
+        public static Builder builder() {
+            return builder(new RandomSplitterParameters());
+        }
+
+        public static Builder builder(RandomSplitterParameters rsp) {
+            return new Builder(rsp);
+        }
+
+        public static final class Builder implements IBuilder {
+            private final RandomSplitterParameters parameters;
+
+            private Builder(RandomSplitterParameters parameters) {
+                this.parameters = parameters;
             }
 
-            public void setSplitDate(String splitDate) {
-                this.splitDate = splitDate;
+            public Builder init(Request request) {
+                getOptional(request, "testPercent").ifPresent(p -> parameters.setTestPercent(toInt(p)));
+                getOptional(request, "randomSeed").ifPresent(p -> parameters.setRandomSeed(toInt(p)));
+                return this;
             }
 
             @Override
-            public String getBuildType() {
+            public URI buildURI() throws URISyntaxException {
                 return null;
             }
 
-            public IBuilder getBuilder(){
-                return builder();
+            @Override
+            public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
+                return null;
             }
 
-            public static Builder builder() {
-                return new Builder(new DateSplitterParameters());
+            public RandomSplitterParameters build() {
+                return parameters;
+            }
+        }
+    }
+
+    private static class DateSplitterParameters implements Parameters {
+        private String splitDate;
+
+        public String getSplitDate() {
+            return splitDate;
+        }
+
+        public void setSplitDate(String splitDate) {
+            this.splitDate = splitDate;
+        }
+
+        @Override
+        public String getBuildType() {
+            return null;
+        }
+
+        public IBuilder getBuilder() {
+            return builder();
+        }
+
+        public static Builder builder() {
+            return new Builder(new DateSplitterParameters());
+        }
+
+        public static final class Builder implements IBuilder {
+            private final DateSplitterParameters parameters;
+
+            private Builder(DateSplitterParameters parameters) {
+                this.parameters = parameters;
             }
 
-            public static final class Builder implements IBuilder {
-                private final DateSplitterParameters parameters;
+            public Builder init(Request request) {
+                parameters.setSplitDate(request.queryParams("splitDate"));
+                return this;
+            }
 
-                private Builder(DateSplitterParameters parameters) {
-                    this.parameters = parameters;
-                }
+            @Override
+            public URI buildURI() throws URISyntaxException {
+                return null;
+            }
 
-                public Builder init(Request request) {
-                    parameters.setSplitDate(request.queryParams("splitDate"));
-                    return this;
-                }
+            @Override
+            public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
+                return null;
+            }
 
-                @Override
-                public URI buildURI() throws URISyntaxException {
-                    return null;
-                }
-
-                @Override
-                public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-                    return null;
-                }
-
-                public DateSplitterParameters build() {
-                    return parameters;
-                }
+            public DateSplitterParameters build() {
+                return parameters;
             }
         }
     }
@@ -464,7 +472,7 @@ public class BuildParameters extends CognitiveParameters {
             return RANK;
         }
 
-        public IBuilder getBuilder(){
+        public IBuilder getBuilder() {
             return builder();
         }
 
@@ -502,18 +510,103 @@ public class BuildParameters extends CognitiveParameters {
     private static class FbtParameters implements Parameters {
 
         public static final String FBT = "fbt";
+        private Integer supportThreshold;
+        private Integer maxItemSetSize;
+        private Integer popularItemBenchmarkWindow;
+        private Double minimalScore;
+        private String similarityFunction;
+        private Boolean enableModelingInsights;
+        private String splitterStrategy;
+        private RandomSplitterParameters randomSplitterParameters;
+        private DateSplitterParameters dateSplitterParameters;
+
+        public Integer getSupportThreshold() {
+            return supportThreshold;
+        }
+
+        public void setSupportThreshold(Integer supportThreshold) {
+            this.supportThreshold = supportThreshold;
+        }
+
+        public Integer getMaxItemSetSize() {
+            return maxItemSetSize;
+        }
+
+        public void setMaxItemSetSize(Integer maxItemSetSize) {
+            this.maxItemSetSize = maxItemSetSize;
+        }
+
+        public Double getMinimalScore() {
+            return minimalScore;
+        }
+
+        public void setMinimalScore(Double minimalScore) {
+            this.minimalScore = minimalScore;
+        }
+
+        public String getSimilarityFunction() {
+            return similarityFunction;
+        }
+
+        public void setSimilarityFunction(String similarityFunction) {
+            this.similarityFunction = similarityFunction;
+        }
+
+        public Boolean getEnableModelingInsights() {
+            return enableModelingInsights;
+        }
+
+        public void setEnableModelingInsights(Boolean enableModelingInsights) {
+            this.enableModelingInsights = enableModelingInsights;
+        }
+
+        public String getSplitterStrategy() {
+            return splitterStrategy;
+        }
+
+        public void setSplitterStrategy(String splitterStrategy) {
+            this.splitterStrategy = splitterStrategy;
+        }
+
+        public RandomSplitterParameters getRandomSplitterParameters() {
+            return randomSplitterParameters;
+        }
+
+        public void setRandomSplitterParameters(RandomSplitterParameters randomSplitterParameters) {
+            this.randomSplitterParameters = randomSplitterParameters;
+        }
+
+        public DateSplitterParameters getDateSplitterParameters() {
+            return dateSplitterParameters;
+        }
+
+        public void setDateSplitterParameters(DateSplitterParameters dateSplitterParameters) {
+            this.dateSplitterParameters = dateSplitterParameters;
+        }
+
+        public Integer getPopularItemBenchmarkWindow() {
+            return popularItemBenchmarkWindow;
+        }
+
+        public void setPopularItemBenchmarkWindow(Integer popularItemBenchmarkWindow) {
+            this.popularItemBenchmarkWindow = popularItemBenchmarkWindow;
+        }
 
         @Override
         public String getBuildType() {
             return FBT;
         }
 
-        public IBuilder getBuilder(){
-            return builder();
+        public IBuilder getBuilder() {
+            return builder(this);
         }
 
         public static Builder builder() {
-            return new Builder(new FbtParameters());
+            return builder(new FbtParameters());
+        }
+
+        public static Builder builder(FbtParameters rsp) {
+            return new Builder(rsp);
         }
 
         public static final class Builder implements IBuilder {
@@ -524,6 +617,18 @@ public class BuildParameters extends CognitiveParameters {
             }
 
             public Builder init(Request request) {
+                getOptional(request, "supportThreshold").ifPresent(p -> parameters.setSupportThreshold(toInt(p)));
+                getOptional(request, "maxItemSetSize").ifPresent(p -> parameters.setMaxItemSetSize(toInt(p)));
+                getOptional(request, "popularItemBenchmarkWindow").ifPresent(p -> parameters.setPopularItemBenchmarkWindow(toInt(p)));
+                getOptional(request, "minimalScore").ifPresent(p -> parameters.setMinimalScore(Double.valueOf(p)));
+
+                getOptional(request, "enableModelingInsights").ifPresent(p -> parameters.setEnableModelingInsights(toBoolean(p)));
+
+                parameters.setSimilarityFunction(request.queryParams("similarityFunction"));
+                parameters.setSplitterStrategy(request.queryParams("splitterStrategy"));
+
+                parameters.setRandomSplitterParameters(RandomSplitterParameters.builder().init(request).build());
+                parameters.setDateSplitterParameters(DateSplitterParameters.builder().init(request).build());
                 return this;
             }
 
@@ -552,12 +657,16 @@ public class BuildParameters extends CognitiveParameters {
             return SAR;
         }
 
-        public IBuilder getBuilder(){
-            return builder();
+        public IBuilder getBuilder() {
+            return builder(this);
         }
 
         public static Builder builder() {
-            return new Builder(new SarParameters());
+            return builder(new SarParameters());
+        }
+
+        public static Builder builder(SarParameters rsp) {
+            return new Builder(rsp);
         }
 
         public static final class Builder implements IBuilder {
