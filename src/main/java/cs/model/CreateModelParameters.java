@@ -1,6 +1,5 @@
 package cs.model;
 
-import com.google.gson.Gson;
 import cs.build.IBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -16,7 +15,7 @@ import java.util.Optional;
 /**
  * @author lyozniy.sergey on 29 Sep 2017.
  */
-public class ModelParameters extends CognitiveParameters {
+public class CreateModelParameters extends CognitiveParameters {
     private String modelName;
     private String description;
 
@@ -37,13 +36,13 @@ public class ModelParameters extends CognitiveParameters {
     }
 
     public static Builder builder() {
-        return new Builder(new ModelParameters());
+        return new Builder(new CreateModelParameters());
     }
 
     public static final class Builder extends CognitiveBuilder implements IBuilder {
-        private final ModelParameters parameters;
+        private final CreateModelParameters parameters;
 
-        private Builder(ModelParameters parameters) {
+        private Builder(CreateModelParameters parameters) {
             super(parameters);
             this.parameters = parameters;
         }
@@ -63,7 +62,7 @@ public class ModelParameters extends CognitiveParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
-            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters));
+            StringEntity reqEntity = new StringEntity(toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
         }

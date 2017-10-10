@@ -1,7 +1,6 @@
 package cs.model;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 import cs.build.IBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -83,7 +82,7 @@ public class BuildParameters extends CognitiveParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             // Request body.
-            StringEntity reqEntity = new StringEntity(new Gson().toJson(parameters));
+            StringEntity reqEntity = new StringEntity(toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
         }
@@ -104,18 +103,6 @@ public class BuildParameters extends CognitiveParameters {
         public static Parameters getBy(String buildType) {
             return buildTypes.get(buildType);
         }
-    }
-
-    private static Boolean toBoolean(String p) {
-        return Boolean.valueOf(p);
-    }
-
-    private static Integer toInt(String p) {
-        return Integer.valueOf(p);
-    }
-
-    private static Optional<String> getOptional(Request request, String field) {
-        return Optional.ofNullable(request.queryParams(field));
     }
 
     private interface Parameters {

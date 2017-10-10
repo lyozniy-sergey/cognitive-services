@@ -1,5 +1,6 @@
 package cs.model;
 
+import com.google.gson.Gson;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import spark.Request;
@@ -46,6 +47,22 @@ public abstract class CognitiveParameters {
 
     public void setSource(Object source) {
         this.source = source;
+    }
+
+    protected static Boolean toBoolean(String p) {
+        return Boolean.valueOf(p);
+    }
+
+    protected static Integer toInt(String p) {
+        return Integer.valueOf(p);
+    }
+
+    protected static String toJson(CognitiveParameters parameters) {
+        return new Gson().toJson(parameters);
+    }
+
+    protected static Optional<String> getOptional(Request request, String field) {
+        return Optional.ofNullable(request.queryParams(field));
     }
 
     public static class CognitiveBuilder {

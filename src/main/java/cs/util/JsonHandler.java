@@ -31,6 +31,9 @@ public final class JsonHandler {
     }
 
     public static String prettify(String jsonText) {
+        if (jsonText == null || jsonText.isEmpty()) {
+            return "";
+        }
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(jsonText);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

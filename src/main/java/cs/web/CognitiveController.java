@@ -19,10 +19,11 @@ package cs.web;
 
 
 import cs.model.BuildParameters;
+import cs.model.CreateModelParameters;
 import cs.model.FaceParameters;
 import cs.model.FileUploadParameters;
-import cs.model.ModelParameters;
 import cs.model.RecommendationParameters;
+import cs.model.UpdateModelParameters;
 import cs.web.route.BaseRoute;
 import cs.web.route.MultipartRoute;
 import org.apache.http.client.HttpClient;
@@ -37,6 +38,7 @@ import static cs.util.Path.Web.GET_REC_BY_ITEM;
 import static cs.util.Path.Web.GET_REC_BY_USER;
 import static cs.util.Path.Web.Headers.CATALOG;
 import static cs.util.Path.Web.Headers.USAGE;
+import static cs.util.Path.Web.UPDATE_MODEL;
 import static cs.util.Path.Web.UPLOAD_CATALOG;
 import static cs.util.Path.Web.UPLOAD_USAGE;
 import static spark.Spark.get;
@@ -53,7 +55,8 @@ public class CognitiveController {
         HttpClient httpclient = HttpClients.createDefault();
         get("/c", (req, res) -> getUploadCatalogForm());
         get("/u", (req, res) -> getUploadUsageForm());
-        get(CREATE_MODEL, new BaseRoute(httpclient, ModelParameters.builder()));
+        get(CREATE_MODEL, new BaseRoute(httpclient, CreateModelParameters.builder()));
+        get(UPDATE_MODEL, new BaseRoute(httpclient, UpdateModelParameters.builder()));
         post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
         post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
         get(CREATE_BUILD, new BaseRoute(httpclient, BuildParameters.builder()));
