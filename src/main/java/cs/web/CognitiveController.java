@@ -18,8 +18,9 @@
 package cs.web;
 
 
-import cs.model.BuildParameters;
+import cs.model.CreateBuildParameters;
 import cs.model.CreateModelParameters;
+import cs.model.DeleteBuildParameters;
 import cs.model.FaceParameters;
 import cs.model.FileUploadParameters;
 import cs.model.RecommendationParameters;
@@ -33,6 +34,7 @@ import java.io.IOException;
 
 import static cs.util.Path.Web.CREATE_BUILD;
 import static cs.util.Path.Web.CREATE_MODEL;
+import static cs.util.Path.Web.DELETE_BUILD;
 import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
 import static cs.util.Path.Web.GET_REC_BY_ITEM;
 import static cs.util.Path.Web.GET_REC_BY_USER;
@@ -59,7 +61,8 @@ public class CognitiveController {
         get(UPDATE_MODEL, new BaseRoute(httpclient, UpdateModelParameters.builder()));
         post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG)));
         post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE)));
-        get(CREATE_BUILD, new BaseRoute(httpclient, BuildParameters.builder()));
+        get(CREATE_BUILD, new BaseRoute(httpclient, CreateBuildParameters.builder()));
+        get(DELETE_BUILD, new BaseRoute(httpclient, DeleteBuildParameters.builder()));
         get(GET_REC_BY_USER, new BaseRoute(httpclient, RecommendationParameters.builder()));
         get(GET_REC_BY_ITEM, new BaseRoute(httpclient, RecommendationParameters.builder()));
         get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));

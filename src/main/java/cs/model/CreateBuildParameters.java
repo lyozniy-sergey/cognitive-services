@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * @author lyozniy.sergey on 04 Oct 2017.
  */
-public class BuildParameters extends CognitiveParameters {
+public class CreateBuildParameters extends CognitiveParameters {
     private String description;
     private String buildType;
     private Map<String, Parameters> buildParameters;
@@ -56,13 +56,13 @@ public class BuildParameters extends CognitiveParameters {
     }
 
     public static Builder builder() {
-        return new Builder(new BuildParameters());
+        return new Builder(new CreateBuildParameters());
     }
 
     public static final class Builder extends CognitiveBuilder implements IBuilder {
-        private final BuildParameters parameters;
+        private final CreateBuildParameters parameters;
 
-        private Builder(BuildParameters parameters) {
+        private Builder(CreateBuildParameters parameters) {
             super(parameters);
             this.parameters = parameters;
         }
@@ -87,7 +87,7 @@ public class BuildParameters extends CognitiveParameters {
             return httpPost;
         }
 
-        public BuildParameters build() {
+        public CreateBuildParameters build() {
             return parameters;
         }
     }
