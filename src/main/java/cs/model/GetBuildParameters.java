@@ -1,7 +1,7 @@
 package cs.model;
 
 import cs.build.IBuilder;
-import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import spark.Request;
 
@@ -10,17 +10,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * @author lyozniy.sergey on 11 Oct 2017.
+ * @author lyozniy.sergey on 12 Oct 2017.
  */
-public class DeleteBuildParameters extends CognitiveParameters {
+public class GetBuildParameters extends CognitiveParameters {
     public static Builder builder() {
-        return new Builder(new DeleteBuildParameters());
+        return new Builder(new GetBuildParameters());
     }
 
     public static final class Builder extends CognitiveBuilder implements IBuilder {
-        private final DeleteBuildParameters parameters;
+        private final GetBuildParameters parameters;
 
-        private Builder(DeleteBuildParameters parameters) {
+        private Builder(GetBuildParameters parameters) {
             super(parameters);
             this.parameters = parameters;
         }
@@ -35,10 +35,10 @@ public class DeleteBuildParameters extends CognitiveParameters {
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
-            return buildHeader(new HttpDelete(uri));
+            return buildHeader(new HttpGet(uri));
         }
 
-        public DeleteBuildParameters build() {
+        public GetBuildParameters build() {
             return parameters;
         }
     }

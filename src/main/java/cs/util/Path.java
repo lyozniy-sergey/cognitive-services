@@ -15,6 +15,7 @@ public class Path {
         public static String UPDATE_MODEL = "/update_model";
         public static String CREATE_BUILD = "/create_build";
         public static String DELETE_BUILD = "/delete_build";
+        public static String GET_BUILD = "/get_build";
 
         public static class Headers {
             public static String CATALOG = "catalogDisplayName";
