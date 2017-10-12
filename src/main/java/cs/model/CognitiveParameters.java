@@ -76,10 +76,7 @@ public abstract class CognitiveParameters {
             parameters.setSubscriptionKey(Optional.ofNullable(request.queryParams("subscriptionKey")).orElseThrow(() -> throwException("Subscription key is not provided")));
             parameters.setUriBase(Optional.ofNullable(request.queryParams("uriBase")).orElseThrow(() -> throwException("URI base is not provided")));
             parameters.setSource(request.queryParams("source"));
-            String modelId = request.queryParams("modelId");
-            if (modelId != null) {
-                parameters.setModelId(modelId);
-            }
+            parameters.setModelId(request.queryParams("modelId"));
             return this;
         }
 
