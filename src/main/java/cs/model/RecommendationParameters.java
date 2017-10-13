@@ -105,7 +105,7 @@ public class RecommendationParameters extends CognitiveParameters {
             includeMetadata.ifPresent(i -> parameters.setIncludeMetadata(Boolean.valueOf(i)));
 
             parameters.setItemsIds(request.queryParams(ITEMS_IDS));
-            parameters.setMinimalScore(Double.valueOf(Optional.ofNullable(request.queryParams(MINIMAL_SCORE)).orElseThrow(() -> throwException("Minimal score is not provided"))));
+            getOptional(request, MINIMAL_SCORE).ifPresent(p -> parameters.setMinimalScore(toDouble(p)));
             return this;
         }
 

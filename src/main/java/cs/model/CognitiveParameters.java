@@ -57,6 +57,10 @@ public abstract class CognitiveParameters {
         return Integer.valueOf(p);
     }
 
+    protected static Double toDouble(String p) {
+        return Double.valueOf(p);
+    }
+
     protected static String toJson(CognitiveParameters parameters) {
         return new Gson().toJson(parameters);
     }
