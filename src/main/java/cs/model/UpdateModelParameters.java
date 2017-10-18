@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 /**
  * @author lyozniy.sergey on 29 Sep 2017.
  */
-public class UpdateModelParameters extends CognitiveParameters {
+public class UpdateModelParameters extends ModelParameters {
     private Integer activeBuildId;
     private String description;
 
@@ -38,7 +38,7 @@ public class UpdateModelParameters extends CognitiveParameters {
         return new Builder(new UpdateModelParameters());
     }
 
-    public static final class Builder extends CognitiveBuilder implements IBuilder {
+    public static final class Builder extends ModelBuilder implements IBuilder {
         private final UpdateModelParameters parameters;
 
         private Builder(UpdateModelParameters parameters) {
@@ -53,9 +53,8 @@ public class UpdateModelParameters extends CognitiveParameters {
             return this;
         }
 
-        public URI buildURI() throws URISyntaxException {
-            URIBuilder builder = super.buildURIBuilder();
-            return builder.build();
+        public URIBuilder buildURI() throws URISyntaxException {
+            return buildURIBuilder();
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {

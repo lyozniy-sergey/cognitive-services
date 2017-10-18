@@ -9,6 +9,8 @@ import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -16,6 +18,7 @@ import java.io.IOException;
  * @author lyozniy.sergey on 03 Oct 2017.
  */
 public final class JsonHandler {
+    private static Logger logger = LoggerFactory.getLogger(JsonHandler.class);
     public static String getJsonResult(HttpResponse httpResponse) throws IOException {
         String jsonString = null;
         HttpEntity entity = httpResponse.getEntity();
@@ -24,10 +27,12 @@ public final class JsonHandler {
             printJson(jsonString);
         }
         return jsonString;
+//        return new Gson().toJson(StatusRes.SUCCESS,new Gson().toJsonTree(jsonString));
     }
 
     public static void printJson(String jsonString) {
         System.out.println(jsonString);
+        logger.debug("Response: {}", jsonString);
     }
 
     public static String prettify(String jsonText) {

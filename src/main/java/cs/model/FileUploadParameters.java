@@ -18,11 +18,19 @@ import static cs.web.route.MultipartRoute.FILE_CONTENT;
  * @author lyozniy.sergey on 02 Oct 2017.
  */
 public class FileUploadParameters extends CognitiveParameters {
-    private String displayName;
+    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/%s";
     private final String displayHeader;
+    private final String uriParam;
+    private String displayName;
 
-    public FileUploadParameters(String displayHeader) {
+    public FileUploadParameters(String displayHeader, String uriParam) {
         this.displayHeader = displayHeader;
+        this.uriParam = uriParam;
+    }
+
+    @Override
+    protected String setupUriBase(){
+        return URI_BASE;
     }
 
     public String getDisplayName() {
@@ -37,8 +45,12 @@ public class FileUploadParameters extends CognitiveParameters {
         return displayHeader;
     }
 
-    public static Builder builder(String displayHeader) {
-        return new Builder(new FileUploadParameters(displayHeader));
+    public String getUriParam() {
+        return uriParam;
+    }
+
+    public static Builder builder(String displayHeader, String uriParam) {
+        return new Builder(new FileUploadParameters(displayHeader, uriParam));
     }
 
     public static class Builder extends CognitiveBuilder implements IBuilder {
@@ -49,19 +61,24 @@ public class FileUploadParameters extends CognitiveParameters {
             this.parameters = parameters;
         }
 
+        @Override
         public Builder init(Request request) {
             super.init(request);
             parameters.setDisplayName(request.queryParams(parameters.getDisplayHeader()));
             parameters.setSource(request.attribute(FILE_CONTENT));
+            String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
+            parameters.setUriBase(String.format(parameters.getUriBase(), modelId, parameters.getUriParam()));
             return this;
         }
 
-        public URI buildURI() throws URISyntaxException {
+        @Override
+        public URIBuilder buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
             builder.setParameter(parameters.getDisplayHeader(), parameters.getDisplayName());
-            return builder.build();
+            return builder;
         }
 
+        @Override
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             HttpPost httpPost = buildHeader(new HttpPost(uri));
             StringBuilder sb = new StringBuilder();

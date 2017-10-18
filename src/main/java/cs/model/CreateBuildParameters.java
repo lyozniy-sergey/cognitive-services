@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import cs.build.IBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import spark.Request;
 
@@ -18,10 +19,16 @@ import java.util.Optional;
 /**
  * @author lyozniy.sergey on 04 Oct 2017.
  */
-public class CreateBuildParameters extends CognitiveParameters {
+public class CreateBuildParameters extends ModelParameters {
+    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/builds";
     private String description;
     private String buildType;
     private Map<String, Parameters> buildParameters;
+
+    @Override
+    protected String setupUriBase() {
+        return URI_BASE;
+    }
 
     public String getDescription() {
         return description;
@@ -59,7 +66,7 @@ public class CreateBuildParameters extends CognitiveParameters {
         return new Builder(new CreateBuildParameters());
     }
 
-    public static final class Builder extends CognitiveBuilder implements IBuilder {
+    public static final class Builder extends ModelBuilder implements IBuilder {
         private final CreateBuildParameters parameters;
 
         private Builder(CreateBuildParameters parameters) {
@@ -69,14 +76,14 @@ public class CreateBuildParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setBuildType(Optional.ofNullable(request.queryParams("buildType")).orElseThrow(() -> throwException("Build type is not set")));
-            parameters.setDescription(Optional.ofNullable(request.queryParams("description")).orElse(""));
+            parameters.setBuildType(getOptional(request, "buildType").orElseThrow(() -> throwException("Build type is not set")));
+            parameters.setDescription(getOptional(request, "description").orElse(""));
             Optional.ofNullable(parameters.getBuildParameters().get(parameters.getBuildType())).orElseThrow(()->throwException("Build type is not valid")).getBuilder().init(request);
             return this;
         }
 
-        public URI buildURI() throws URISyntaxException {
-            return super.buildURIBuilder().build();
+        public URIBuilder buildURI() throws URISyntaxException {
+            return super.buildURIBuilder();
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
@@ -181,7 +188,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 
@@ -383,7 +390,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 
@@ -435,7 +442,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 
@@ -479,7 +486,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 
@@ -620,7 +627,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 
@@ -789,6 +796,7 @@ public class CreateBuildParameters extends CognitiveParameters {
                 this.parameters = parameters;
             }
 
+            @Override
             public Builder init(Request request) {
                 getOptional(request, "supportThreshold").ifPresent(p -> parameters.setSupportThreshold(toInt(p)));
                 getOptional(request, "popularItemBenchmarkWindow").ifPresent(p -> parameters.setPopularItemBenchmarkWindow(toInt(p)));
@@ -811,7 +819,7 @@ public class CreateBuildParameters extends CognitiveParameters {
             }
 
             @Override
-            public URI buildURI() throws URISyntaxException {
+            public URIBuilder buildURI() throws URISyntaxException {
                 return null;
             }
 

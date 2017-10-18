@@ -27,7 +27,7 @@ public class BaseRoute implements Route {
     @Override
     public Object handle(Request request, Response response) {
         try {
-            URI uri = builder.init(request).buildURI();
+            URI uri = builder.init(request).buildURI().build();
             HttpResponse httpResponse = httpClient.execute(builder.buildRequest(uri));
 
             return getJsonResult(httpResponse);

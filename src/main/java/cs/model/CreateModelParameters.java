@@ -10,14 +10,19 @@ import spark.Request;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * @author lyozniy.sergey on 29 Sep 2017.
  */
 public class CreateModelParameters extends CognitiveParameters {
+    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models";
     private String modelName;
     private String description;
+
+    @Override
+    protected String setupUriBase(){
+        return URI_BASE;
+    }
 
     public String getModelName() {
         return modelName;
@@ -49,14 +54,13 @@ public class CreateModelParameters extends CognitiveParameters {
 
         public Builder init(Request request) {
             super.init(request);
-            parameters.setModelName(Optional.ofNullable(request.queryParams("modelName")).orElseThrow(() -> throwException("The name of model is not set")));
-            parameters.setDescription(Optional.ofNullable(request.queryParams("description")).orElse(""));
+            parameters.setModelName(getOptional(request, "modelName").orElseThrow(() -> throwException("The name of model is not set")));
+            parameters.setDescription(getOptional(request, "description").orElse(""));
             return this;
         }
 
-        public URI buildURI() throws URISyntaxException {
-            URIBuilder builder = super.buildURIBuilder();
-            return builder.build();
+        public URIBuilder buildURI() throws URISyntaxException {
+            return super.buildURIBuilder();
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {

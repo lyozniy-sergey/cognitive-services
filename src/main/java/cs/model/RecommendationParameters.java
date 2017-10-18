@@ -14,22 +14,12 @@ import java.util.Optional;
 /**
  * @author lyozniy.sergey on 28 Sep 2017.
  */
-public class RecommendationParameters extends CognitiveParameters {
-    private String userId;
+public abstract class RecommendationParameters extends ModelParameters {
     private Integer numberOfResults;
 
     private String itemsIds;
-    private Double minimalScore;
     private Boolean includeMetadata;
     private Integer buildId;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public Integer getNumberOfResults() {
         return numberOfResults;
@@ -63,69 +53,54 @@ public class RecommendationParameters extends CognitiveParameters {
         this.buildId = buildId;
     }
 
-    public Double getMinimalScore() {
-        return minimalScore;
-    }
-
-    public void setMinimalScore(Double minimalScore) {
-        this.minimalScore = minimalScore;
-    }
-
     public Boolean getIncludeMetadata() {
         return includeMetadata;
     }
 
-    public static Builder builder() {
-        return new Builder(new RecommendationParameters());
+    @Override
+    public String toString() {
+        return super.toString() +
+                ", numberOfResults=" + numberOfResults +
+                ", itemsIds='" + itemsIds + '\'' +
+                ", includeMetadata=" + includeMetadata +
+                ", buildId=" + buildId;
     }
 
-    public static final class Builder extends CognitiveBuilder implements IBuilder {
-        private static final String USER_ID = "userId";
+    public abstract static class RecommendationBuilder extends ModelBuilder implements IBuilder {
         private static final String NUMBER_OF_RESULTS = "numberOfResults";
         private static final String BUILD_ID = "buildId";
         private static final String INCLUDE_METADATA = "includeMetadata";
-        private static final String ITEMS_IDS = "itemsIds";
-        private static final String MINIMAL_SCORE = "minimalScore";
         private final RecommendationParameters parameters;
 
-        private Builder(RecommendationParameters parameters) {
+        protected RecommendationBuilder(RecommendationParameters parameters) {
             super(parameters);
             this.parameters = parameters;
         }
 
-        public Builder init(Request request) {
+        public RecommendationBuilder init(Request request) {
             super.init(request);
-            parameters.setUserId(Optional.ofNullable(request.queryParams(USER_ID)).orElseThrow(() -> throwException("User id is not provided")));
-            parameters.setNumberOfResults(Integer.valueOf(Optional.ofNullable(request.queryParams(NUMBER_OF_RESULTS)).orElseThrow(() -> throwException("Number of results is not provided"))));
+            parameters.setNumberOfResults(toInt(getOptional(request, NUMBER_OF_RESULTS).orElseThrow(() -> throwException("Number of results is not provided"))));
 
-            Optional<String> buildId = Optional.ofNullable(request.queryParams(BUILD_ID));
+            Optional<String> buildId = getOptional(request, BUILD_ID);
             buildId.ifPresent(b -> parameters.setBuildId(Integer.valueOf(b)));
 
-            Optional<String> includeMetadata = Optional.ofNullable(request.queryParams(INCLUDE_METADATA));
+            Optional<String> includeMetadata = getOptional(request, INCLUDE_METADATA);
             includeMetadata.ifPresent(i -> parameters.setIncludeMetadata(Boolean.valueOf(i)));
 
-            parameters.setItemsIds(request.queryParams(ITEMS_IDS));
-            getOptional(request, MINIMAL_SCORE).ifPresent(p -> parameters.setMinimalScore(toDouble(p)));
             return this;
         }
 
-        public URI buildURI() throws URISyntaxException {
+        @Override
+        public URIBuilder buildURI() throws URISyntaxException {
             URIBuilder builder = super.buildURIBuilder();
-            builder.setParameter(USER_ID, parameters.getUserId());
             builder.setParameter(NUMBER_OF_RESULTS, parameters.getNumberOfResults().toString());
             if (parameters.isIncludeMetadata() != null) {
                 builder.setParameter(INCLUDE_METADATA, parameters.isIncludeMetadata().toString());
             }
-            if (parameters.getItemsIds() != null) {
-                builder.setParameter(ITEMS_IDS, parameters.getItemsIds());
-            }
             if (parameters.getBuildId() != null) {
                 builder.setParameter(BUILD_ID, parameters.getBuildId().toString());
             }
-            if (parameters.getMinimalScore() != null) {
-                builder.setParameter(MINIMAL_SCORE, parameters.getMinimalScore().toString());
-            }
-            return builder.build();
+            return builder;
         }
 
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
