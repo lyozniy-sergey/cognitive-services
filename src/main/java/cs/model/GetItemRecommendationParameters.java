@@ -56,7 +56,7 @@ public class GetItemRecommendationParameters extends RecommendationParameters {
         @Override
         public Builder init(Request request) {
             super.init(request);
-            parameters.setMinimalScore(toDouble(getOptional(request, MINIMAL_SCORE).orElseThrow(() -> throwException("Number of results is not provided"))));
+            parameters.setMinimalScore(toDouble(getOptional(request, MINIMAL_SCORE).orElseThrow(() -> throwException("Minimal score is not provided"))));
             parameters.setItemsIds(request.queryParams(ITEM_IDS));
             return this;
         }

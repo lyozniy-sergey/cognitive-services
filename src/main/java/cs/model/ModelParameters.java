@@ -25,8 +25,10 @@ public abstract class ModelParameters extends CognitiveParameters {
         public ModelBuilder init(Request request) {
             super.init(request);
 
-            String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
-            parameters.setUriBase(String.format(parameters.getUriBase(), modelId));
+            if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
+                String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
+                parameters.setUriBase(String.format(parameters.getUriBase(), modelId));
+            }
             return this;
 
         }

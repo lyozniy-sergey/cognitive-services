@@ -35,9 +35,11 @@ public class GetBuildParameters extends ModelParameters {
 
         public BuildBuilder init(Request request) {
             super.init(request);
-            String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
-            String buildId = getOptional(request, "buildId").orElseThrow(() -> throwException("Build id is not set"));
-            parameters.setUriBase(String.format(parameters.getUriBase(), modelId, buildId));
+            if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
+                String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
+                String buildId = getOptional(request, "buildId").orElseThrow(() -> throwException("Build id is not set"));
+                parameters.setUriBase(String.format(parameters.getUriBase(), modelId, buildId));
+            }
             return this;
         }
 

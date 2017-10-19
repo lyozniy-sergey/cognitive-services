@@ -80,7 +80,7 @@ public abstract class CognitiveParameters {
 
         public CognitiveBuilder init(Request request) {
             parameters.setSubscriptionKey(getOptional(request, "subscriptionKey").orElseThrow(() -> throwException("Subscription key is not provided")));
-            parameters.setUriBase(parameters.setupUriBase());
+            parameters.setUriBase(getOptional(request, "uriBase").orElse(parameters.setupUriBase()));
             parameters.setSource(request.queryParams("source"));
             return this;
         }

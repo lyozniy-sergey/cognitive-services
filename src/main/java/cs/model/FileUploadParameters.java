@@ -66,8 +66,10 @@ public class FileUploadParameters extends CognitiveParameters {
             super.init(request);
             parameters.setDisplayName(request.queryParams(parameters.getDisplayHeader()));
             parameters.setSource(request.attribute(FILE_CONTENT));
-            String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
-            parameters.setUriBase(String.format(parameters.getUriBase(), modelId, parameters.getUriParam()));
+            if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
+                String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
+                parameters.setUriBase(String.format(parameters.getUriBase(), modelId, parameters.getUriParam()));
+            }
             return this;
         }
 
