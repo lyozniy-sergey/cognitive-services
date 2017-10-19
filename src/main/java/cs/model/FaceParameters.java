@@ -23,6 +23,7 @@ public class FaceParameters extends CognitiveParameters {
     private boolean returnFaceId;
     private boolean returnFaceLandmarks;
     private String returnFaceAttributes;
+    private Object source;
 
     @Override
     protected String setupUriBase() {
@@ -51,6 +52,14 @@ public class FaceParameters extends CognitiveParameters {
 
     public void setReturnFaceAttributes(String returnFaceAttributes) {
         this.returnFaceAttributes = returnFaceAttributes;
+    }
+
+    public Object getSource() {
+        return source;
+    }
+
+    public void setSource(Object source) {
+        this.source = source;
     }
 
     @Override
@@ -83,6 +92,7 @@ public class FaceParameters extends CognitiveParameters {
             parameters.setReturnFaceId(toBoolean(getOptional(request, RETURN_FACE_ID).orElse("true")));
             parameters.setReturnFaceLandmarks(toBoolean(getOptional(request, RETURN_FACE_LANDMARKS).orElse("false")));
             parameters.setReturnFaceAttributes(getOptional(request, RETURN_FACE_ATTRIBUTES).orElse(""));
+            parameters.setSource(getOptional(request, "source").orElseThrow(() -> throwException("Source is not provided")));
             return this;
         }
 

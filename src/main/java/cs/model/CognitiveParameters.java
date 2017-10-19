@@ -18,7 +18,6 @@ public abstract class CognitiveParameters {
 
     private transient String subscriptionKey;
     private transient String uriBase;
-    private transient Object source;
 
     protected abstract String setupUriBase();
 
@@ -36,14 +35,6 @@ public abstract class CognitiveParameters {
 
     public void setUriBase(String uriBase) {
         this.uriBase = uriBase;
-    }
-
-    public Object getSource() {
-        return source;
-    }
-
-    public void setSource(Object source) {
-        this.source = source;
     }
 
     protected static Boolean toBoolean(String p) {
@@ -68,7 +59,7 @@ public abstract class CognitiveParameters {
 
     @Override
     public String toString() {
-        return "subscriptionKey='" + subscriptionKey + '\'' + ", source=" + source;
+        return "subscriptionKey='" + subscriptionKey + '\'';
     }
 
     public static class CognitiveBuilder {
@@ -81,7 +72,6 @@ public abstract class CognitiveParameters {
         public CognitiveBuilder init(Request request) {
             parameters.setSubscriptionKey(getOptional(request, "subscriptionKey").orElseThrow(() -> throwException("Subscription key is not provided")));
             parameters.setUriBase(getOptional(request, "uriBase").orElse(parameters.setupUriBase()));
-            parameters.setSource(request.queryParams("source"));
             return this;
         }
 

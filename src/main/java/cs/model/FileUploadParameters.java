@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import static cs.web.route.MultipartRoute.FILE_CONTENT;
 
@@ -22,6 +23,7 @@ public class FileUploadParameters extends CognitiveParameters {
     private final String displayHeader;
     private final String uriParam;
     private String displayName;
+    private Object source;
 
     public FileUploadParameters(String displayHeader, String uriParam) {
         this.displayHeader = displayHeader;
@@ -49,6 +51,14 @@ public class FileUploadParameters extends CognitiveParameters {
         return uriParam;
     }
 
+    public Object getSource() {
+        return source;
+    }
+
+    public void setSource(Object source) {
+        this.source = source;
+    }
+
     public static Builder builder(String displayHeader, String uriParam) {
         return new Builder(new FileUploadParameters(displayHeader, uriParam));
     }
@@ -65,7 +75,7 @@ public class FileUploadParameters extends CognitiveParameters {
         public Builder init(Request request) {
             super.init(request);
             parameters.setDisplayName(request.queryParams(parameters.getDisplayHeader()));
-            parameters.setSource(request.attribute(FILE_CONTENT));
+            parameters.setSource(Optional.ofNullable(request.attribute(FILE_CONTENT)).orElseThrow(()-> throwException("File content is not provided")));
             if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
                 String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
                 parameters.setUriBase(String.format(parameters.getUriBase(), modelId, parameters.getUriParam()));

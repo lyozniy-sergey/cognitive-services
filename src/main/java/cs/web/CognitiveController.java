@@ -42,7 +42,7 @@ import static cs.util.Path.Web.CREATE_BUILD;
 import static cs.util.Path.Web.CREATE_MODEL;
 import static cs.util.Path.Web.DELETE_BUILD;
 import static cs.util.Path.Web.GET_BUILD;
-import static cs.util.Path.Web.GET_FACE_RECOGNIZE;
+import static cs.util.Path.Web.GET_FACE_DETECT;
 import static cs.util.Path.Web.GET_REC_BY_ITEM;
 import static cs.util.Path.Web.GET_REC_BY_USER;
 import static cs.util.Path.Web.HOME;
@@ -66,23 +66,23 @@ public class CognitiveController {
 
     public static void main(String[] args) throws IOException {
         port(8082);
-        HttpClient httpclient = HttpClients.createDefault();
+        HttpClient httpClient = HttpClients.createDefault();
         final Configuration configuration = new Configuration(new Version(2, 3, 0));
         configuration.setClassForTemplateLoading(CognitiveController.class, "/");
 
         get(HOME, new FreemarkerBasedRoute(configuration, WELCOME, null));
         get(UPLOAD_CATALOG_FORM, (req, res) -> getUploadCatalogForm());
         get(UPLOAD_USAGE_FORM, (req, res) -> getUploadUsageForm());
-        get(CREATE_MODEL, new BaseRoute(httpclient, CreateModelParameters.builder()));
-        get(UPDATE_MODEL, new BaseRoute(httpclient, UpdateModelParameters.builder()));
-        post(UPLOAD_CATALOG, new MultipartRoute(httpclient, FileUploadParameters.builder(CATALOG_DISPLAY_NAME, CATALOG_PARAM)));
-        post(UPLOAD_USAGE, new MultipartRoute(httpclient, FileUploadParameters.builder(USAGE_DISPLAY_NAME, USAGE_PARAM)));
-        get(CREATE_BUILD, new BaseRoute(httpclient, CreateBuildParameters.builder()));
-        get(DELETE_BUILD, new BaseRoute(httpclient, DeleteBuildParameters.builder()));
-        get(GET_BUILD, new BaseRoute(httpclient, GetBuildParameters.builder()));
-        get(GET_REC_BY_USER, new BaseRoute(httpclient, GetUserRecommendationParameters.builder()));
-        get(GET_REC_BY_ITEM, new BaseRoute(httpclient, GetItemRecommendationParameters.builder()));
-        get(GET_FACE_RECOGNIZE, new BaseRoute(httpclient, FaceParameters.builder()));
+        get(CREATE_MODEL, new BaseRoute(httpClient, CreateModelParameters.builder()));
+        get(UPDATE_MODEL, new BaseRoute(httpClient, UpdateModelParameters.builder()));
+        post(UPLOAD_CATALOG, new MultipartRoute(httpClient, FileUploadParameters.builder(CATALOG_DISPLAY_NAME, CATALOG_PARAM)));
+        post(UPLOAD_USAGE, new MultipartRoute(httpClient, FileUploadParameters.builder(USAGE_DISPLAY_NAME, USAGE_PARAM)));
+        get(CREATE_BUILD, new BaseRoute(httpClient, CreateBuildParameters.builder()));
+        get(DELETE_BUILD, new BaseRoute(httpClient, DeleteBuildParameters.builder()));
+        get(GET_BUILD, new BaseRoute(httpClient, GetBuildParameters.builder()));
+        get(GET_REC_BY_USER, new BaseRoute(httpClient, GetUserRecommendationParameters.builder()));
+        get(GET_REC_BY_ITEM, new BaseRoute(httpClient, GetItemRecommendationParameters.builder()));
+        get(GET_FACE_DETECT, new BaseRoute(httpClient, FaceParameters.builder()));
     }
 
     private static String getUploadUsageForm() {
