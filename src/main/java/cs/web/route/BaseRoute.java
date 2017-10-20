@@ -35,6 +35,7 @@ public class BaseRoute implements Route {
             printJson(jsonResult);
             return jsonResult;
         } catch (Exception e) {
+            e.printStackTrace();
             throw halt(500);
         }
     }

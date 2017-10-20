@@ -19,7 +19,7 @@ import static cs.web.route.MultipartRoute.FILE_CONTENT;
  * @author lyozniy.sergey on 02 Oct 2017.
  */
 public class FileUploadParameters extends CognitiveParameters {
-    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/%s";
+    public final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/%s";
     private final String displayHeader;
     private final String uriParam;
     private String displayName;
@@ -78,8 +78,17 @@ public class FileUploadParameters extends CognitiveParameters {
             parameters.setSource(Optional.ofNullable(request.attribute(FILE_CONTENT)).orElseThrow(()-> throwException("File content is not provided")));
             if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
                 String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
-                parameters.setUriBase(String.format(parameters.getUriBase(), modelId, parameters.getUriParam()));
+                transformUriBase(modelId, parameters.getUriParam());
             }
+            return this;
+        }
+
+        public Builder transformUriBase(String modelId, String uriParam) {
+            return transformUriBase(parameters.getUriBase(), modelId, uriParam);
+        }
+
+        public Builder transformUriBase(String uri, String modelId, String uriParam) {
+            parameters.setUriBase(String.format(uri, modelId, uriParam));
             return this;
         }
 
@@ -103,6 +112,15 @@ public class FileUploadParameters extends CognitiveParameters {
             StringEntity reqEntity = new StringEntity(sb.toString());
             httpPost.setEntity(reqEntity);
             return httpPost;
+        }
+        public Builder setDisplayName(String displayName) {
+            parameters.setDisplayName(displayName);
+            return this;
+        }
+
+        public Builder setSource(Object source) {
+            parameters.setSource(source);
+            return this;
         }
     }
 }

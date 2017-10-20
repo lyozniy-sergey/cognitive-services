@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
  * @author lyozniy.sergey on 29 Sep 2017.
  */
 public class CreateModelParameters extends CognitiveParameters {
-    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models";
+    public final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models";
     private String modelName;
     private String description;
 
@@ -69,6 +69,15 @@ public class CreateModelParameters extends CognitiveParameters {
             StringEntity reqEntity = new StringEntity(toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
+        }
+        public Builder setModelName(String modelName) {
+            parameters.setModelName(modelName);
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            parameters.setDescription(description);
+            return this;
         }
     }
 }
