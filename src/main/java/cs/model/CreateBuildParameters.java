@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author lyozniy.sergey on 04 Oct 2017.
  */
 public class CreateBuildParameters extends ModelParameters {
-    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/builds";
+    public final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/builds";
     private String description;
     private String buildType;
     private Map<String, Parameters> buildParameters;
@@ -92,6 +92,16 @@ public class CreateBuildParameters extends ModelParameters {
             StringEntity reqEntity = new StringEntity(toJson(parameters));
             httpPost.setEntity(reqEntity);
             return httpPost;
+        }
+
+        public Builder setDescription(String description) {
+            parameters.setDescription(description);
+            return this;
+        }
+
+        public Builder setBuildType(String buildType) {
+            parameters.setBuildType(buildType);
+            return this;
         }
 
         public CreateBuildParameters build() {

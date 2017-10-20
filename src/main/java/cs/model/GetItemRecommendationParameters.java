@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
  * @author lyozniy.sergey on 28 Sep 2017.
  */
 public class GetItemRecommendationParameters extends RecommendationParameters {
-    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/recommend/item";
+    public final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/recommend/item";
     private Double minimalScore;
 
     @Override
@@ -76,6 +76,11 @@ public class GetItemRecommendationParameters extends RecommendationParameters {
         @Override
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             return buildHeader(new HttpGet(uri));
+        }
+
+        public Builder setMinimalScore(Double minimalScore){
+            parameters.setMinimalScore(minimalScore);
+            return this;
         }
     }
 }

@@ -24,7 +24,6 @@ public final class JsonHandler {
         HttpEntity entity = httpResponse.getEntity();
         if (entity != null) {
             jsonString = prettify(EntityUtils.toString(entity).trim());
-            printJson(jsonString);
         }
         return jsonString;
 //        return new Gson().toJson(StatusRes.SUCCESS,new Gson().toJsonTree(jsonString));

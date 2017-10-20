@@ -1,6 +1,7 @@
 package cs.model;
 
 import com.google.gson.Gson;
+import cs.build.IBuilder;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public abstract class CognitiveParameters {
         return "subscriptionKey='" + subscriptionKey + '\'';
     }
 
-    public static class CognitiveBuilder {
+    public static abstract class CognitiveBuilder implements IBuilder {
         private final CognitiveParameters parameters;
 
         public CognitiveBuilder(CognitiveParameters parameters) {
@@ -85,6 +86,16 @@ public abstract class CognitiveParameters {
             logger.debug("URI: {}", request.getURI().toString());
             logger.debug("Parameters: {}", parameters.toString());
             return request;
+        }
+
+        public CognitiveBuilder setSubscriptionKey(String subscriptionKey) {
+            parameters.setSubscriptionKey(subscriptionKey);
+            return this;
+        }
+
+        public CognitiveBuilder setUriBase(String uriBase) {
+            parameters.setUriBase(uriBase);
+            return this;
         }
     }
 

@@ -10,6 +10,7 @@ import spark.Route;
 import java.net.URI;
 
 import static cs.util.JsonHandler.getJsonResult;
+import static cs.util.JsonHandler.printJson;
 import static spark.Spark.halt;
 
 /**
@@ -27,14 +28,19 @@ public class BaseRoute implements Route {
     @Override
     public Object handle(Request request, Response response) {
         try {
-            URI uri = builder.init(request).buildURI().build();
+            URI uri = init(request).buildURI().build();
             HttpResponse httpResponse = httpClient.execute(builder.buildRequest(uri));
 
-            return getJsonResult(httpResponse);
+            String jsonResult = getJsonResult(httpResponse);
+            printJson(jsonResult);
+            return jsonResult;
         } catch (Exception e) {
-            e.printStackTrace();
             throw halt(500);
         }
+    }
+
+    protected IBuilder init(Request request) {
+        return builder.init(request);
     }
 
 }

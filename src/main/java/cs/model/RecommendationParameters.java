@@ -106,5 +106,25 @@ public abstract class RecommendationParameters extends ModelParameters {
         public HttpUriRequest buildRequest(URI uri) throws UnsupportedEncodingException {
             return buildHeader(new HttpGet(uri));
         }
+
+        public RecommendationBuilder setNumberOfResults(Integer numberOfResults) {
+            parameters.setNumberOfResults(numberOfResults);
+            return this;
+        }
+
+        public RecommendationBuilder setItemsIds(String itemsIds) {
+            parameters.setItemsIds(itemsIds);
+            return this;
+        }
+
+        public RecommendationBuilder setIncludeMetadata(Boolean includeMetadata) {
+            parameters.setIncludeMetadata(includeMetadata);
+            return this;
+        }
+
+        public RecommendationBuilder setBuildId(Integer buildId) {
+            parameters.setBuildId(buildId);
+            return this;
+        }
     }
 }

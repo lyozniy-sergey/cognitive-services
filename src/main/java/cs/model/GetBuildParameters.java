@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
  * @author lyozniy.sergey on 12 Oct 2017.
  */
 public class GetBuildParameters extends ModelParameters {
-    private final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/builds/%s";
+    public final static String URI_BASE = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/models/%s/builds/%s";
 
     @Override
     protected String setupUriBase() {
@@ -37,9 +37,18 @@ public class GetBuildParameters extends ModelParameters {
             super.init(request);
             if (parameters.getUriBase() != null && parameters.getUriBase().contains("%s")) {
                 String modelId = getOptional(request, "modelId").orElseThrow(() -> throwException("Model id is not provided"));
-                String buildId = getOptional(request, "buildId").orElseThrow(() -> throwException("Build id is not set"));
-                parameters.setUriBase(String.format(parameters.getUriBase(), modelId, buildId));
+                Integer buildId = toInt(getOptional(request, "buildId").orElseThrow(() -> throwException("Build id is not set")));
+                transformUriBase(modelId, buildId);
             }
+            return this;
+        }
+
+        public BuildBuilder transformUriBase(String modelId, Integer buildId) {
+            return transformUriBase(parameters.getUriBase(), modelId, buildId);
+        }
+
+        public BuildBuilder transformUriBase(String uri, String modelId, Integer buildId) {
+            parameters.setUriBase(String.format(uri, modelId, buildId));
             return this;
         }
 

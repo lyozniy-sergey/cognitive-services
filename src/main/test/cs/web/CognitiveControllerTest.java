@@ -150,6 +150,23 @@ public class CognitiveControllerTest {
     }
 
     @Test
+    public void testDeleteBuild() throws IOException {
+        HttpResponse httpResponse = getResponse(200);
+        String expectedOutput = JsonHandler.prettify("");
+        httpResponse.setEntity(new StringEntity(expectedOutput));
+
+        when(request.queryParams("subscriptionKey")).thenReturn(subscriptionKey);
+        when(request.queryParams("modelId")).thenReturn("1fa58243-75ab-4e6c-97fc-9cdf96db3f76");
+        when(request.queryParams("buildId")).thenReturn("1661906");
+        when(httpClient.execute(any(HttpUriRequest.class))).thenReturn(httpResponse);
+
+        Object res = getBaseRoute(GetBuildParameters.builder()).handle(request, response);
+
+        assertNotNull(res);
+        assertEquals(expectedOutput, res);
+    }
+
+    @Test
     public void testGetUserRecommendation() throws IOException {
         HttpResponse httpResponse = getResponse(200);
         String expectedOutput = JsonHandler.prettify("{\"recommendedItems\": [{\"items\": [{ \"id\": \"S4T-00021\", \"name\": \"MS STORES 12 MONTH LIVE SUBSCRIPTION ESD US ONLY\"}],\"rating\": 0.50104714205762,\"reasoning\": [\"Default recommendation for \\u0027O365 Personal 1Mo 32/64 Alng SubPKL Onln MSStore DwnLdC2R NR RtlSyndctn\\u0027\"]}]}");

@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 public class FaceParameters extends CognitiveParameters {
     private static Logger logger = LoggerFactory.getLogger(FaceParameters.class);
     private static final String body = "{\"url\":\"%s\"}";
-    private static final String URI_BASE = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect";
+    public static final String URI_BASE = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect";
     private boolean returnFaceId;
     private boolean returnFaceLandmarks;
     private String returnFaceAttributes;
@@ -79,6 +79,7 @@ public class FaceParameters extends CognitiveParameters {
         public static final String RETURN_FACE_ID = "returnFaceId";
         public static final String RETURN_FACE_LANDMARKS = "returnFaceLandmarks";
         public static final String RETURN_FACE_ATTRIBUTES = "returnFaceAttributes";
+        public static final String SOURCE = "source";
         private final FaceParameters parameters;
 
         private Builder(FaceParameters parameters) {
@@ -91,8 +92,8 @@ public class FaceParameters extends CognitiveParameters {
             super.init(request);
             parameters.setReturnFaceId(toBoolean(getOptional(request, RETURN_FACE_ID).orElse("true")));
             parameters.setReturnFaceLandmarks(toBoolean(getOptional(request, RETURN_FACE_LANDMARKS).orElse("false")));
-            parameters.setReturnFaceAttributes(getOptional(request, RETURN_FACE_ATTRIBUTES).orElse(""));
-            parameters.setSource(getOptional(request, "source").orElseThrow(() -> throwException("Source is not provided")));
+            parameters.setReturnFaceAttributes(request.queryParams(RETURN_FACE_ATTRIBUTES));
+            parameters.setSource(getOptional(request, SOURCE).orElseThrow(() -> throwException("Source is not provided")));
             return this;
         }
 
@@ -101,7 +102,10 @@ public class FaceParameters extends CognitiveParameters {
             URIBuilder builder = super.buildURIBuilder();
             builder.setParameter(RETURN_FACE_ID, String.valueOf(parameters.isReturnFaceId()));
             builder.setParameter(RETURN_FACE_LANDMARKS, String.valueOf(parameters.isReturnFaceLandmarks()));
-            builder.setParameter(RETURN_FACE_ATTRIBUTES, parameters.getReturnFaceAttributes());
+            if (parameters.getReturnFaceAttributes() != null) {
+                builder.setParameter(RETURN_FACE_ATTRIBUTES, parameters.getReturnFaceAttributes());
+            }
+            builder.setParameter(SOURCE, parameters.getSource().toString());
             return builder;
         }
 
@@ -114,6 +118,26 @@ public class FaceParameters extends CognitiveParameters {
             httpPost.setEntity(reqEntity);
             logger.debug("body: {}", body);
             return httpPost;
+        }
+
+        public Builder setReturnFaceId(boolean returnFaceId) {
+            parameters.setReturnFaceId(returnFaceId);
+            return this;
+        }
+
+        public Builder setReturnFaceLandmarks(boolean returnFaceLandmarks) {
+            parameters.setReturnFaceLandmarks(returnFaceLandmarks);
+            return this;
+        }
+
+        public Builder setReturnFaceAttributes(String returnFaceAttributes) {
+            parameters.setReturnFaceAttributes(returnFaceAttributes);
+            return this;
+        }
+
+        public Builder setSource(Object source) {
+            parameters.setSource(source);
+            return this;
         }
     }
 }
