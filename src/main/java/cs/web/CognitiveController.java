@@ -96,8 +96,8 @@ public class CognitiveController {
     private static String getUploadForm(String action, String header, String value) {
         return String.format("<form method='post' action='/%s' enctype='multipart/form-data'>"
                 + "<input type='file' name='upload' accept='.csv'>"
-                + "<input type='hidden' name='modelId' value='1fa58243-75ab-4e6c-97fc-9cdf96db3f76'>"
-                + "<input type='hidden' name='subscriptionKey' value='abe7eea3a1e94cb4bf150735292971ce'>"
+                + "<input type='hidden' name='modelId' value='0a423382-ebd0-4132-b7ec-0cdf9190743b'>"
+                + "<input type='hidden' name='subscriptionKey' value='84f59c16e2d74a179af9d8f8ac03119a'>"
                 + "<input type='text' name='%s' value='%s'>"
                 + "<button>%s</button>"
                 + "</form>", action, header, value, action);
