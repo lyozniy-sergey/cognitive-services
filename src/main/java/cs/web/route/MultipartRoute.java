@@ -28,10 +28,10 @@ public class MultipartRoute extends BaseRoute {
         try {
             request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
-            try (InputStream input = request.raw().getPart("upload").getInputStream()) { // getPart needs to use same "name" as input field in form
+            try (InputStream input = request.raw().getPart("upload").getInputStream()) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(input));
                 // skip the header of the csv
-//                    inputList = br.lines().skip(1).map(function).collect(Collectors.toList());
+//                inputList = br.lines().skip(1).map(function).collect(Collectors.toList());
                 request.attribute(FILE_CONTENT, br.lines().collect(Collectors.toList()));
             }
             return super.handle(request, response);
