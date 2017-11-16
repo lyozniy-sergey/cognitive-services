@@ -18,6 +18,7 @@
 package cs.web;
 
 
+import cs.model.ContactParameters;
 import cs.model.CreateBuildParameters;
 import cs.model.CreateModelParameters;
 import cs.model.DeleteBuildParameters;
@@ -42,6 +43,7 @@ import static cs.util.Path.Web.CREATE_BUILD;
 import static cs.util.Path.Web.CREATE_MODEL;
 import static cs.util.Path.Web.DELETE_BUILD;
 import static cs.util.Path.Web.GET_BUILD;
+import static cs.util.Path.Web.GET_CONTACTS;
 import static cs.util.Path.Web.GET_FACE_DETECT;
 import static cs.util.Path.Web.GET_REC_BY_ITEM;
 import static cs.util.Path.Web.GET_REC_BY_USER;
@@ -83,6 +85,7 @@ public class CognitiveController {
         get(GET_REC_BY_USER, new BaseRoute(httpClient, GetUserRecommendationParameters.builder()));
         get(GET_REC_BY_ITEM, new BaseRoute(httpClient, GetItemRecommendationParameters.builder()));
         get(GET_FACE_DETECT, new BaseRoute(httpClient, FaceParameters.builder()));
+        get(GET_CONTACTS, new BaseRoute(httpClient, ContactParameters.builder()));
     }
 
     private static String getUploadUsageForm() {

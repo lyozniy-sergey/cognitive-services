@@ -18,6 +18,7 @@ public class Path {
         public static String CREATE_BUILD = "/create_build";
         public static String DELETE_BUILD = "/delete_build";
         public static String GET_BUILD = "/get_build";
+        public static String GET_CONTACTS = "/get_contacts";
 
         public static class Requests {
             public static String CATALOG_PARAM = "catalog";
